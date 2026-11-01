@@ -13,10 +13,10 @@ and cross-cutting acceptance criterion.
 **Purpose**: Initialize the approved Node.js 24 / npm / ESM project and independent
 quality tools.
 
-- [ ] T001 Create the Node.js 24 ESM npm project manifest and lockfile with Express 5, Jest, Supertest, ESLint, and pinned Semgrep dependencies in `package.json` and `package-lock.json`
-- [ ] T002 [P] Configure the ESLint flat configuration and the `lint` script in `eslint.config.js` and `package.json`
-- [ ] T003 [P] Add reviewed local Semgrep rules and a pinned, separately invokable `security` script in `contracts/semgrep.yml` and `package.json`
-- [ ] T004 Create source, test, acceptance, and runtime-data directory placeholders without committing task data in `src/.gitkeep`, `tests/unit/.gitkeep`, `tests/integration/.gitkeep`, `acceptance/.gitkeep`, and `data/.gitkeep`
+- [X] T001 Create the Node.js 24 ESM npm project manifest and lockfile with Express 5, Jest, Supertest, ESLint, and pinned Semgrep dependencies in `package.json` and `package-lock.json`
+- [X] T002 [P] Configure the ESLint flat configuration and the `lint` script in `eslint.config.js` and `package.json`
+- [X] T003 [P] Add reviewed local Semgrep rules and a pinned, separately invokable `security` script in `contracts/semgrep.yml` and `package.json`
+- [X] T004 Create source, test, acceptance, and runtime-data directory placeholders without committing task data in `src/.gitkeep`, `tests/unit/.gitkeep`, `tests/integration/.gitkeep`, `acceptance/.gitkeep`, and `data/.gitkeep`
 
 ## Phase 2: Foundational (Blocking Prerequisites)
 

@@ -1,0 +1,20 @@
+rules:
+  - id: smart-todo.no-dynamic-code-execution
+    languages:
+      - javascript
+      - typescript
+    message: Avoid dynamic code execution with eval or the Function constructor.
+    severity: ERROR
+    pattern-either:
+      - pattern: eval(...)
+      - pattern: new Function(...)
+
+  - id: smart-todo.no-child-process-shell-execution
+    languages:
+      - javascript
+      - typescript
+    message: Review shell command execution for untrusted input and prefer argument-based process APIs.
+    severity: WARNING
+    pattern-either:
+      - pattern: child_process.exec(...)
+      - pattern: child_process.execSync(...)
