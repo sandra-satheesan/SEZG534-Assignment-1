@@ -7,7 +7,9 @@
     "node": ">=24 <25"
   },
   "scripts": {
+    "start": "node src/server.js",
     "test": "node --experimental-vm-modules ./node_modules/jest/bin/jest.js",
+    "test:acceptance": "node acceptance/run-acceptance.js",
     "lint": "eslint . --max-warnings=0",
     "security": "semgrep scan --config contracts/semgrep.yml --error --metrics=off ."
   },

@@ -22,16 +22,16 @@ quality tools.
 
 **Purpose**: Implement shared infrastructure required by all user stories.
 
-- [ ] T005 Create the Express app factory with dependency/config injection and no listening side effect in `src/app.js`
-- [ ] T006 [P] Define typed application errors for validation, missing resources, oversized requests, and persistence failures in `src/errors/app-error.js`
-- [ ] T007 Implement centralized error handling that emits the documented `{ "error": { "code", "message" } }` JSON envelope, maps HTTP statuses, and hides internal details in `src/middleware/error-handler.js`
-- [ ] T008 Implement shared request validation middleware for JSON object shape, allowed fields, enums, required/non-empty text, and empty-update rejection in `src/validation/tasks.validation.js`
-- [ ] T009 Enforce a 10 KiB (10,240-byte) JSON request-body limit and map oversized bodies to HTTP 413 in `src/app.js` and `src/middleware/error-handler.js`
-- [ ] T010 Implement JSON task repository initialization, parsing, stored-shape validation, and explicit read/parse errors in `src/persistence/json-task.repository.js`
-- [ ] T011 Implement in-process serialized repository mutations and same-directory temporary-file replacement; preserve the prior file on failure and do not claim multi-process write support in `src/persistence/json-task.repository.js`
-- [ ] T012 Implement server startup, `TASKS_FILE` configuration, ephemeral-port support, readiness signaling, and graceful shutdown in `src/server.js`
-- [ ] T013 Add Jest configuration for Node.js ESM and isolated unit/integration suites in `jest.config.js`
-- [ ] T014 Add an independent in-repository acceptance runner that starts/stops the server and calls only public loopback HTTP routes in `acceptance/run-acceptance.js`
+- [X] T005 Create the Express app factory with dependency/config injection and no listening side effect in `src/app.js`
+- [X] T006 [P] Define typed application errors for validation, missing resources, oversized requests, and persistence failures in `src/errors/app-error.js`
+- [X] T007 Implement centralized error handling that emits the documented `{ "error": { "code", "message" } }` JSON envelope, maps HTTP statuses, and hides internal details in `src/middleware/error-handler.js`
+- [X] T008 Implement shared request validation middleware for JSON object shape, allowed fields, enums, required/non-empty text, and empty-update rejection in `src/validation/tasks.validation.js`
+- [X] T009 Enforce a 10 KiB (10,240-byte) JSON request-body limit and map oversized bodies to HTTP 413 in `src/app.js` and `src/middleware/error-handler.js`
+- [X] T010 Implement JSON task repository initialization, parsing, stored-shape validation, and explicit read/parse errors in `src/persistence/json-task.repository.js`
+- [X] T011 Implement in-process serialized repository mutations and same-directory temporary-file replacement; preserve the prior file on failure and do not claim multi-process write support in `src/persistence/json-task.repository.js`
+- [X] T012 Implement server startup, `TASKS_FILE` configuration, ephemeral-port support, readiness signaling, and graceful shutdown in `src/server.js`
+- [X] T013 Add Jest configuration for Node.js ESM and isolated unit/integration suites in `jest.config.js`
+- [X] T014 Add an independent in-repository acceptance runner that starts/stops the server and calls only public loopback HTTP routes in `acceptance/run-acceptance.js`
 
 ## Phase 3: User Story 1 - Create and review tasks (Priority: P1) 🎯 MVP
 
