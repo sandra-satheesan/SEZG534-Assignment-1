@@ -78,19 +78,19 @@ return 404.
 
 ### Tests for User Story 2
 
-- [ ] T029 [P] [US2] Test partial update field validation, unchanged omitted fields, completed-task detail edits that preserve completed status, empty update rejection, and unknown-property HTTP 400 with no mutation for FR-004 and TD-04 in `tests/unit/tasks.update.test.js` and `tests/integration/tasks.update.test.js`
-- [ ] T030 [P] [US2] Test allowed transitions and skipped, reversed, repeated, and post-completion backward transitions, verifying completed-task detail edits preserve status and rejected transitions leave the entire stored task unchanged for FR-008 in `tests/unit/tasks.transitions.test.js` and `tests/integration/tasks.transitions.test.js`
-- [ ] T031 [P] [US2] Test delete success, 404 for nonexistent update/delete, and persistence error responses for FR-005, FR-011, and FR-014 in `tests/integration/tasks.delete.test.js`
-- [ ] T032 [P] [US2] Black-box test partial updates, completed-task title/description/priority/tag edits that retain completed status, deletion, documented success responses, and update/delete persistence across restart for FR-004, FR-005, FR-008, FR-012, FR-013, FR-015, and FR-016 using public HTTP in `acceptance/tasks.update-delete.acceptance.test.js`
+- [X] T029 [P] [US2] Test partial update field validation, unchanged omitted fields, completed-task detail edits that preserve completed status, empty update rejection, and unknown-property HTTP 400 with no mutation for FR-004 and TD-04 in `tests/unit/tasks.update.test.js` and `tests/integration/tasks.update.test.js`
+- [X] T030 [P] [US2] Test allowed transitions and skipped, reversed, repeated, and post-completion backward transitions, verifying completed-task detail edits preserve status and rejected transitions leave the entire stored task unchanged for FR-008 in `tests/unit/tasks.transitions.test.js` and `tests/integration/tasks.transitions.test.js`
+- [X] T031 [P] [US2] Test delete success, 404 for nonexistent update/delete, and persistence error responses for FR-005, FR-011, and FR-014 in `tests/integration/tasks.delete.test.js`
+- [X] T032 [P] [US2] Black-box test partial updates, completed-task title/description/priority/tag edits that retain completed status, deletion, documented success responses, and update/delete persistence across restart for FR-004, FR-005, FR-008, FR-012, FR-013, FR-015, and FR-016 using public HTTP in `acceptance/tasks.update-delete.acceptance.test.js`
 
 ### Implementation for User Story 2
 
-- [ ] T033 [US2] Implement atomic partial task updates, including editable title, description, priority, and tags after completion while preserving completed status, and validate a candidate task before persistence for FR-004 in `src/services/tasks.service.js`
-- [ ] T034 [US2] Enforce only pending → in-progress → completed transitions and reject repeated, skipped, reversed, or backward transitions without persisting any update; detail edits after completion must retain completed status for FR-008 in `src/services/tasks.service.js`
-- [ ] T035 [US2] Implement task deletion through the serialized JSON repository in `src/services/tasks.service.js`
-- [ ] T036 [US2] Add `PATCH /api/tasks/:id` and `DELETE /api/tasks/:id` routes in `src/routes/tasks.routes.js`
-- [ ] T037 [US2] Map update and delete outcomes to documented JSON envelopes and status codes in `src/controllers/tasks.controller.js`
-- [ ] T038 [US2] Black-box test valid/invalid/backward status transitions, completed-task status preservation, 404 update/delete behavior, status codes, and error envelopes for FR-008, FR-010, FR-011, FR-012, FR-015, and FR-016 through public HTTP in `acceptance/tasks.transitions.acceptance.test.js`
+- [X] T033 [US2] Implement atomic partial task updates, including editable title, description, priority, and tags after completion while preserving completed status, and validate a candidate task before persistence for FR-004 in `src/services/tasks.service.js`
+- [X] T034 [US2] Enforce only pending → in-progress → completed transitions and reject repeated, skipped, reversed, or backward transitions without persisting any update; detail edits after completion must retain completed status for FR-008 in `src/services/tasks.service.js`
+- [X] T035 [US2] Implement task deletion through the serialized JSON repository in `src/services/tasks.service.js`
+- [X] T036 [US2] Add `PATCH /api/tasks/:id` and `DELETE /api/tasks/:id` routes in `src/routes/tasks.routes.js`
+- [X] T037 [US2] Map update and delete outcomes to documented JSON envelopes and status codes in `src/controllers/tasks.controller.js`
+- [X] T038 [US2] Black-box test valid/invalid/backward status transitions, completed-task status preservation, 404 update/delete behavior, status codes, and error envelopes for FR-008, FR-010, FR-011, FR-012, FR-015, and FR-016 through public HTTP in `acceptance/tasks.transitions.acceptance.test.js`
 
 **Checkpoint**: User Stories 1 and 2 pass independently; invalid transitions and
 missing IDs leave persisted state unchanged and return the specified errors.

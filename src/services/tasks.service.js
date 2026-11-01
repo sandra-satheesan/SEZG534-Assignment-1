@@ -1,8 +1,12 @@
 import { randomUUID } from 'node:crypto';
-import { NotFoundError } from '../errors/app-error.js';
-import { createTaskRecord } from '../models/task.js';
+import { NotFoundError, ValidationError } from '../errors/app-error.js';
+import { createTaskRecord, isTaskRecord } from '../models/task.js';
 
 const ID_GENERATION_ATTEMPTS = 10;
+const NEXT_STATUS = new Map([
+  ['pending', 'in-progress'],
+  ['in-progress', 'completed'],
+]);
 
 function createUniqueId(tasks, idGenerator) {
   const existingIds = new Set(tasks.map((task) => task.id));
@@ -48,6 +52,49 @@ export function createTaskService({
         throw new NotFoundError('Task not found');
       }
       return task;
+    },
+
+    async updateTask(id, input) {
+      return repository.mutate((tasks) => {
+        const index = tasks.findIndex((candidate) => candidate.id === id);
+        if (index === -1) {
+          throw new NotFoundError('Task not found');
+        }
+
+        const currentTask = tasks[index];
+        if (
+          Object.hasOwn(input, 'status')
+          && NEXT_STATUS.get(currentTask.status) !== input.status
+        ) {
+          throw new ValidationError('Requested status is not the next permitted transition');
+        }
+
+        const updatedTask = { ...currentTask, ...input };
+        if (!isTaskRecord(updatedTask)) {
+          throw new ValidationError('Updated task contains invalid fields');
+        }
+
+        const updatedTasks = [...tasks];
+        updatedTasks[index] = updatedTask;
+        return {
+          tasks: updatedTasks,
+          result: updatedTask,
+        };
+      });
+    },
+
+    async deleteTask(id) {
+      return repository.mutate((tasks) => {
+        const index = tasks.findIndex((candidate) => candidate.id === id);
+        if (index === -1) {
+          throw new NotFoundError('Task not found');
+        }
+
+        return {
+          tasks: tasks.filter((task) => task.id !== id),
+          result: { id, deleted: true },
+        };
+      });
     },
   });
 }
