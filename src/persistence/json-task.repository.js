@@ -2,10 +2,7 @@ import { randomUUID } from 'node:crypto';
 import * as defaultFileSystem from 'node:fs/promises';
 import path from 'node:path';
 import { PersistenceError } from '../errors/app-error.js';
-
-const TASK_FIELDS = ['id', 'title', 'description', 'priority', 'tags', 'status'];
-const PRIORITIES = new Set(['low', 'medium', 'high']);
-const STATUSES = new Set(['pending', 'in-progress', 'completed']);
+import { isTaskCollection } from '../models/task.js';
 
 function clone(value) {
   if (value === undefined) {
@@ -15,45 +12,8 @@ function clone(value) {
 }
 
 function validateCollection(value) {
-  if (!Array.isArray(value)) {
-    throw new Error('Stored task data must be an array');
-  }
-
-  const ids = new Set();
-  for (const task of value) {
-    if (
-      task === null
-      || typeof task !== 'object'
-      || Array.isArray(task)
-      || Object.keys(task).sort().join(',') !== [...TASK_FIELDS].sort().join(',')
-    ) {
-      throw new Error('Stored task has an invalid shape');
-    }
-
-    if (
-      typeof task.id !== 'string'
-      || !/^[0-9a-f]{8}-[0-9a-f]{4}-[1-8][0-9a-f]{3}-[89ab][0-9a-f]{3}-[0-9a-f]{12}$/i.test(task.id)
-      || ids.has(task.id)
-      || typeof task.title !== 'string'
-      || task.title.length === 0
-      || task.title.trim() !== task.title
-      || typeof task.description !== 'string'
-      || task.description.length === 0
-      || task.description.trim() !== task.description
-      || !PRIORITIES.has(task.priority)
-      || !STATUSES.has(task.status)
-      || !Array.isArray(task.tags)
-      || task.tags.some((tag, index) => (
-        typeof tag !== 'string'
-        || tag.length === 0
-        || tag.trim() !== tag
-        || task.tags.indexOf(tag) !== index
-      ))
-    ) {
-      throw new Error('Stored task contains invalid field values');
-    }
-
-    ids.add(task.id);
+  if (!isTaskCollection(value)) {
+    throw new Error('Stored task collection contains invalid data');
   }
 }
 

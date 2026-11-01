@@ -45,23 +45,23 @@ return a client error without creating a record.
 
 ### Tests for User Story 1
 
-- [ ] T015 [P] [US1] Test task creation required fields, whitespace validation, pending default, and invalid supplied initial status for FR-001 and FR-010 in `tests/unit/tasks.create.test.js` and `tests/integration/tasks.create.test.js`
-- [ ] T016 [P] [US1] Test UUID uniqueness, list retrieval, ID retrieval, success envelopes, and 404 for an unknown read ID for FR-002, FR-003, FR-011, and FR-012 in `tests/unit/tasks.identity.test.js` and `tests/integration/tasks.read.test.js`
-- [ ] T017 [P] [US1] Black-box test task creation, unique IDs, list/get routes, pending default, validation outcomes, JSON envelopes, and create/read restart persistence for FR-001, FR-002, FR-003, FR-010, FR-012, FR-013, FR-015, and FR-016 using public HTTP in `acceptance/tasks.create-read.acceptance.test.js`
-- [ ] T018 [P] [US1] Test JSON first-run initialization and malformed, unreadable, and unwritable persistence errors without success-shaped responses for FR-014 in `tests/integration/json-task.repository.test.js`
-- [ ] T019 [P] [US1] Test JSON bodies at 10 KiB and above 10 KiB, expecting valid-boundary handling and HTTP 413 without mutation for TD-03 in `tests/integration/request-size.test.js`
-- [ ] T020 [P] [US1] Test rejection of unknown create properties with HTTP 400 and no task creation for TD-04 in `tests/integration/tasks.validation.test.js`
-- [ ] T021 [P] [US1] Test create-time tag trimming, whitespace-only tag rejection, case-sensitive duplicate removal, and first-occurrence order for TD-05 in `tests/unit/tasks.validation.test.js`
+- [X] T015 [P] [US1] Test task creation required fields, whitespace validation, pending default, and invalid supplied initial status for FR-001 and FR-010 in `tests/unit/tasks.create.test.js` and `tests/integration/tasks.create.test.js`
+- [X] T016 [P] [US1] Test UUID uniqueness, list retrieval, ID retrieval, success envelopes, and 404 for an unknown read ID for FR-002, FR-003, FR-011, and FR-012 in `tests/unit/tasks.identity.test.js` and `tests/integration/tasks.read.test.js`
+- [X] T017 [P] [US1] Black-box test task creation, unique IDs, list/get routes, pending default, validation outcomes, JSON envelopes, and create/read restart persistence for FR-001, FR-002, FR-003, FR-010, FR-012, FR-013, FR-015, and FR-016 using public HTTP in `acceptance/tasks.create-read.acceptance.test.js`
+- [X] T018 [P] [US1] Test JSON first-run initialization and malformed, unreadable, and unwritable persistence errors without success-shaped responses for FR-014 in `tests/integration/json-task.repository.test.js`
+- [X] T019 [P] [US1] Test JSON bodies at 10 KiB and above 10 KiB, expecting valid-boundary handling and HTTP 413 without mutation for TD-03 in `tests/integration/request-size.test.js`
+- [X] T020 [P] [US1] Test rejection of unknown create properties with HTTP 400 and no task creation for TD-04 in `tests/integration/tasks.validation.test.js`
+- [X] T021 [P] [US1] Test create-time tag trimming, whitespace-only tag rejection, case-sensitive duplicate removal, and first-occurrence order for TD-05 in `tests/unit/tasks.validation.test.js`
 
 ### Implementation for User Story 1
 
-- [ ] T022 [P] [US1] Define the Task, Priority, and Status constants and field validation rules from `data-model.md` in `src/models/task.js`
-- [ ] T023 [US1] Implement task creation with Node.js 24 `crypto.randomUUID()`, collision checking, and pending default in `src/services/tasks.service.js`
-- [ ] T024 [US1] Implement collection and ID retrieval through the JSON repository in `src/services/tasks.service.js`
-- [ ] T025 [US1] Add task routes for `POST /api/tasks`, `GET /api/tasks`, and `GET /api/tasks/:id` in `src/routes/tasks.routes.js`
-- [ ] T026 [US1] Map create/list/get requests to documented JSON success envelopes and create `Location` header in `src/controllers/tasks.controller.js`
-- [ ] T027 [US1] Wire task routes, validation middleware, JSON body-size handling, and centralized errors in `src/app.js`
-- [ ] T028 [US1] Register the isolated User Story 1 black-box acceptance suite as a separately invokable npm script in `package.json`
+- [X] T022 [P] [US1] Define the Task, Priority, and Status constants and field validation rules from `data-model.md` in `src/models/task.js`
+- [X] T023 [US1] Implement task creation with Node.js 24 `crypto.randomUUID()`, collision checking, and pending default in `src/services/tasks.service.js`
+- [X] T024 [US1] Implement collection and ID retrieval through the JSON repository in `src/services/tasks.service.js`
+- [X] T025 [US1] Add task routes for `POST /api/tasks`, `GET /api/tasks`, and `GET /api/tasks/:id` in `src/routes/tasks.routes.js`
+- [X] T026 [US1] Map create/list/get requests to documented JSON success envelopes and create `Location` header in `src/controllers/tasks.controller.js`
+- [X] T027 [US1] Wire task routes, validation middleware, JSON body-size handling, and centralized errors in `src/app.js`
+- [X] T028 [US1] Register the isolated User Story 1 black-box acceptance suite as a separately invokable npm script in `package.json`
 
 **Checkpoint**: User Story 1 passes independently against a fresh isolated JSON
 file. Creation and retrieval return documented responses and unique IDs.

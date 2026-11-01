@@ -9,6 +9,7 @@
   "scripts": {
     "start": "node src/server.js",
     "test": "node --experimental-vm-modules ./node_modules/jest/bin/jest.js",
+    "test:acceptance:us1": "npm test -- --runInBand --testMatch='**/acceptance/tasks.create-read.acceptance.test.js'",
     "test:acceptance": "node acceptance/run-acceptance.js",
     "lint": "eslint . --max-warnings=0",
     "security": "semgrep scan --config contracts/semgrep.yml --error --metrics=off ."

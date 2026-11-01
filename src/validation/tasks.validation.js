@@ -1,7 +1,8 @@
 import { ValidationError } from '../errors/app-error.js';
+import { TASK_PRIORITIES, TASK_STATUSES } from '../models/task.js';
 
-const PRIORITIES = new Set(['low', 'medium', 'high']);
-const STATUSES = new Set(['pending', 'in-progress', 'completed']);
+const PRIORITIES = new Set(TASK_PRIORITIES);
+const STATUSES = new Set(TASK_STATUSES);
 const CREATE_FIELDS = new Set(['title', 'description', 'priority', 'tags', 'status']);
 const UPDATE_FIELDS = new Set(['title', 'description', 'priority', 'tags', 'status']);
 
