@@ -5,6 +5,7 @@ const PRIORITIES = new Set(TASK_PRIORITIES);
 const STATUSES = new Set(TASK_STATUSES);
 const CREATE_FIELDS = new Set(['title', 'description', 'priority', 'tags', 'status']);
 const UPDATE_FIELDS = new Set(['title', 'description', 'priority', 'tags', 'status']);
+const TASK_FILTER_FIELDS = new Set(['status', 'priority', 'tag', 'sort']);
 
 function requireObject(body) {
   if (body === null || typeof body !== 'object' || Array.isArray(body)) {
@@ -110,3 +111,56 @@ export const validateUpdateTask = middleware((body) => {
     throw new ValidationError('status must be pending, in-progress, or completed');
   }
 });
+
+function requireQueryValue(query, field, allowedValues) {
+  const value = query[field];
+  if (value === undefined) {
+    return undefined;
+  }
+  if (typeof value !== 'string' || !allowedValues.has(value)) {
+    throw new ValidationError(`${field} has an invalid value`);
+  }
+  return value;
+}
+
+export function validateTaskFilters(request, response, next) {
+  try {
+    const query = request.query;
+    const unknownFields = Object.keys(query)
+      .filter((field) => !TASK_FILTER_FIELDS.has(field));
+    if (unknownFields.length > 0) {
+      throw new ValidationError(`Unknown query parameter: ${unknownFields.join(', ')}`);
+    }
+
+    const status = requireQueryValue(query, 'status', STATUSES);
+    const priority = requireQueryValue(query, 'priority', PRIORITIES);
+    const sort = requireQueryValue(query, 'sort', new Set(['priority']));
+    const rawTags = query.tag === undefined
+      ? []
+      : Array.isArray(query.tag) ? query.tag : [query.tag];
+    const tags = [];
+    const seenTags = new Set();
+
+    for (const tag of rawTags) {
+      if (typeof tag !== 'string' || tag.trim().length === 0) {
+        throw new ValidationError('tag query parameters must be non-empty strings');
+      }
+
+      const normalizedTag = tag.trim();
+      if (!seenTags.has(normalizedTag)) {
+        seenTags.add(normalizedTag);
+        tags.push(normalizedTag);
+      }
+    }
+
+    request.taskFilters = {
+      ...(status === undefined ? {} : { status }),
+      ...(priority === undefined ? {} : { priority }),
+      ...(tags.length === 0 ? {} : { tags }),
+      ...(sort === undefined ? {} : { sort }),
+    };
+    next();
+  } catch (error) {
+    next(error);
+  }
+}

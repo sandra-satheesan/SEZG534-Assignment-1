@@ -122,14 +122,22 @@ export function stopAcceptanceServer(child) {
   });
 }
 
-export function runAcceptanceSuite() {
+export function runAcceptanceSuite({ suite } = {}) {
   return new Promise((resolve, reject) => {
+    const suitePatterns = {
+      filters: '**/acceptance/tasks.filters.acceptance.test.js',
+    };
+    if (suite !== undefined && !Object.hasOwn(suitePatterns, suite)) {
+      reject(new Error(`Unknown acceptance suite: ${suite}`));
+      return;
+    }
+    const testPattern = suitePatterns[suite] ?? '**/acceptance/**/*.acceptance.test.js';
     const child = spawn(process.execPath, [
       '--experimental-vm-modules',
       jestEntry,
       '--runInBand',
       '--testMatch',
-      '**/acceptance/**/*.acceptance.test.js',
+      testPattern,
     ], {
       cwd: projectRoot,
       stdio: 'inherit',
@@ -148,7 +156,11 @@ export function runAcceptanceSuite() {
 }
 
 if (process.argv[1] && import.meta.url === pathToFileURL(process.argv[1]).href) {
-  runAcceptanceSuite().catch((error) => {
+  const suiteArgument = process.argv[2];
+  const suite = suiteArgument?.startsWith('--suite=')
+    ? suiteArgument.slice('--suite='.length)
+    : undefined;
+  runAcceptanceSuite({ suite }).catch((error) => {
     console.error(error.message);
     process.exitCode = 1;
   });

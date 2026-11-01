@@ -9,7 +9,7 @@ export function createTasksController(service) {
     },
 
     async listTasks(request, response) {
-      const tasks = await service.listTasks();
+      const tasks = await service.listTasks(request.taskFilters);
       response.status(200).json({ data: tasks });
     },
 

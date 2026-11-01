@@ -7,6 +7,11 @@ const NEXT_STATUS = new Map([
   ['pending', 'in-progress'],
   ['in-progress', 'completed'],
 ]);
+const PRIORITY_RANK = new Map([
+  ['high', 0],
+  ['medium', 1],
+  ['low', 2],
+]);
 
 function createUniqueId(tasks, idGenerator) {
   const existingIds = new Set(tasks.map((task) => task.id));
@@ -41,8 +46,22 @@ export function createTaskService({
       });
     },
 
-    async listTasks() {
-      return repository.readAll();
+    async listTasks(filters = {}) {
+      const tasks = await repository.readAll();
+      const filteredTasks = tasks.filter((task) => (
+        (filters.status === undefined || task.status === filters.status)
+        && (filters.priority === undefined || task.priority === filters.priority)
+        && (filters.tags === undefined
+          || filters.tags.every((tag) => task.tags.includes(tag)))
+      ));
+
+      if (filters.sort !== 'priority') {
+        return filteredTasks;
+      }
+
+      return [...filteredTasks].sort((first, second) => (
+        PRIORITY_RANK.get(first.priority) - PRIORITY_RANK.get(second.priority)
+      ));
     },
 
     async getTask(id) {

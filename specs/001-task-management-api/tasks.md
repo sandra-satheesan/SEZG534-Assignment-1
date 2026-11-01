@@ -106,17 +106,17 @@ empty results, and stable priority ordering.
 
 ### Tests for User Story 3
 
-- [ ] T039 [P] [US3] Test status, priority, and combined filter semantics including an empty result for FR-006 in `tests/unit/tasks.filters.test.js` and `tests/integration/tasks.filters.test.js`
-- [ ] T040 [P] [US3] Test high-to-low priority ordering, stable ties, and invalid priority/sort query rejection for FR-007 in `tests/unit/tasks.sort.test.js` and `tests/integration/tasks.sort.test.js`
-- [ ] T041 [P] [US3] Test repeated tag filters require all requested tags, trim query tags, remove case-sensitive duplicate query values, and distinguish case for FR-009 and TD-05 in `tests/unit/tasks.tags.test.js` and `tests/integration/tasks.tags.test.js`
-- [ ] T042 [P] [US3] Black-box test status/priority/tag filters, AND semantics, all-tag matching, normalized case-sensitive tags, stable sorting, empty results, query validation, and response envelopes for FR-006, FR-007, FR-009, FR-010, FR-012, FR-015, and FR-016 using public HTTP in `acceptance/tasks.filters.acceptance.test.js`
+- [X] T039 [P] [US3] Test status, priority, and combined filter semantics including an empty result for FR-006 in `tests/unit/tasks.filters.test.js` and `tests/integration/tasks.filters.test.js`
+- [X] T040 [P] [US3] Test high-to-low priority ordering, stable ties, and invalid priority/sort query rejection for FR-007 in `tests/unit/tasks.sort.test.js` and `tests/integration/tasks.sort.test.js`
+- [X] T041 [P] [US3] Test repeated tag filters require all requested tags, trim query tags, remove case-sensitive duplicate query values, and distinguish case for FR-009 and TD-05 in `tests/unit/tasks.tags.test.js` and `tests/integration/tasks.tags.test.js`
+- [X] T042 [P] [US3] Black-box test status/priority/tag filters, AND semantics, all-tag matching, normalized case-sensitive tags, stable sorting, empty results, query validation, and response envelopes for FR-006, FR-007, FR-009, FR-010, FR-012, FR-015, and FR-016 using public HTTP in `acceptance/tasks.filters.acceptance.test.js`
 
 ### Implementation for User Story 3
 
-- [ ] T043 [US3] Validate allowed `status`, `priority`, repeated `tag`, and `sort=priority` query parameters in `src/validation/tasks.validation.js`
-- [ ] T044 [US3] Implement AND-combined filters, all-tags matching, normalized case-sensitive tags, and stable high-to-low priority sorting without reordering persisted data in `src/services/tasks.service.js`
-- [ ] T045 [US3] Map validated task-list query parameters to service filters and return the standard collection envelope in `src/controllers/tasks.controller.js`
-- [ ] T046 [US3] Register the isolated filter acceptance suite in the independent black-box runner without importing application modules in `acceptance/run-acceptance.js`
+- [X] T043 [US3] Validate allowed `status`, `priority`, repeated `tag`, and `sort=priority` query parameters in `src/validation/tasks.validation.js`
+- [X] T044 [US3] Implement AND-combined filters, all-tags matching, normalized case-sensitive tags, and stable high-to-low priority sorting without reordering persisted data in `src/services/tasks.service.js`
+- [X] T045 [US3] Map validated task-list query parameters to service filters and return the standard collection envelope in `src/controllers/tasks.controller.js`
+- [X] T046 [US3] Register the isolated filter acceptance suite in the independent black-box runner without importing application modules in `acceptance/run-acceptance.js`
 
 **Checkpoint**: All user stories pass independently against isolated fixtures and
 the public API contract.
