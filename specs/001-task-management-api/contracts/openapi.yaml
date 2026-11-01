@@ -1,0 +1,311 @@
+openapi: 3.1.0
+info:
+  title: Smart Todo & Task Management API
+  version: 1.0.0
+  description: Contract for managing a shared task collection.
+servers:
+  - url: http://localhost:3000/api
+paths:
+  /tasks:
+    post:
+      operationId: createTask
+      summary: Create a task
+      requestBody:
+        description: JSON request bodies are limited to 10 KiB (10,240 bytes).
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/CreateTask'
+      responses:
+        '201':
+          description: Task created
+          headers:
+            Location:
+              schema:
+                type: string
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/TaskResponse'
+        '400':
+          $ref: '#/components/responses/BadRequest'
+        '413':
+          $ref: '#/components/responses/PayloadTooLarge'
+        '500':
+          $ref: '#/components/responses/InternalError'
+    get:
+      operationId: listTasks
+      summary: List and filter tasks
+      parameters:
+        - name: status
+          in: query
+          schema:
+            $ref: '#/components/schemas/TaskStatus'
+        - name: priority
+          in: query
+          schema:
+            $ref: '#/components/schemas/Priority'
+        - name: tag
+          in: query
+          description: >-
+            Repeat this parameter to require all listed tags. Values are trimmed
+            and duplicate values are removed by exact case-sensitive equality;
+            matching against task tags is exact and case-sensitive.
+          style: form
+          explode: true
+          schema:
+            type: array
+            items:
+              type: string
+              minLength: 1
+        - name: sort
+          in: query
+          schema:
+            type: string
+            enum: [priority]
+      responses:
+        '200':
+          description: Task collection
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/TaskListResponse'
+        '400':
+          $ref: '#/components/responses/BadRequest'
+        '500':
+          $ref: '#/components/responses/InternalError'
+  /tasks/{id}:
+    parameters:
+      - name: id
+        in: path
+        required: true
+        schema:
+          type: string
+          format: uuid
+    get:
+      operationId: getTask
+      summary: Retrieve a task
+      responses:
+        '200':
+          description: Task found
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/TaskResponse'
+        '400':
+          $ref: '#/components/responses/BadRequest'
+        '404':
+          $ref: '#/components/responses/NotFound'
+        '500':
+          $ref: '#/components/responses/InternalError'
+    patch:
+      operationId: updateTask
+      summary: Partially update task details and/or advance status
+      description: >-
+        Title, description, priority, and tags remain editable after completion.
+        Editing those fields leaves status completed. Backward status transitions
+        from completed are rejected.
+      requestBody:
+        description: JSON request bodies are limited to 10 KiB (10,240 bytes).
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/UpdateTask'
+      responses:
+        '200':
+          description: Task updated
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/TaskResponse'
+        '400':
+          $ref: '#/components/responses/BadRequest'
+        '404':
+          $ref: '#/components/responses/NotFound'
+        '413':
+          $ref: '#/components/responses/PayloadTooLarge'
+        '500':
+          $ref: '#/components/responses/InternalError'
+    delete:
+      operationId: deleteTask
+      summary: Delete a task
+      responses:
+        '200':
+          description: Task deleted
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/DeleteTaskResponse'
+        '404':
+          $ref: '#/components/responses/NotFound'
+        '500':
+          $ref: '#/components/responses/InternalError'
+components:
+  schemas:
+    Priority:
+      type: string
+      enum: [low, medium, high]
+    TaskStatus:
+      type: string
+      enum: [pending, in-progress, completed]
+    CreateTask:
+      type: object
+      additionalProperties: false
+      required: [title, description, priority, tags]
+      properties:
+        title:
+          type: string
+          minLength: 1
+          pattern: '\S'
+        description:
+          type: string
+          minLength: 1
+          pattern: '\S'
+        priority:
+          $ref: '#/components/schemas/Priority'
+        tags:
+          type: array
+          description: >-
+            Tags are trimmed, whitespace-only tags are invalid, and exact
+            case-sensitive duplicates after trimming are removed while preserving
+            the first occurrence and remaining order.
+          items:
+            type: string
+            minLength: 1
+            pattern: '\S'
+        status:
+          type: string
+          enum: [pending]
+          default: pending
+    UpdateTask:
+      type: object
+      additionalProperties: false
+      minProperties: 1
+      properties:
+        title:
+          type: string
+          minLength: 1
+          pattern: '\S'
+        description:
+          type: string
+          minLength: 1
+          pattern: '\S'
+        priority:
+          $ref: '#/components/schemas/Priority'
+        tags:
+          type: array
+          description: >-
+            Tags replace the existing list. They are trimmed, whitespace-only tags
+            are invalid, and exact case-sensitive duplicates after trimming are
+            removed while preserving the first occurrence and remaining order.
+          items:
+            type: string
+            minLength: 1
+            pattern: '\S'
+        status:
+          $ref: '#/components/schemas/TaskStatus'
+    Task:
+      type: object
+      required: [id, title, description, priority, tags, status]
+      properties:
+        id:
+          type: string
+          format: uuid
+          readOnly: true
+        title:
+          type: string
+          minLength: 1
+          pattern: '\S'
+        description:
+          type: string
+          minLength: 1
+          pattern: '\S'
+        priority:
+          $ref: '#/components/schemas/Priority'
+        tags:
+          type: array
+          description: >-
+            Normalized tags: trimmed and unique by exact case-sensitive equality,
+            in first-occurrence order.
+          uniqueItems: true
+          items:
+            type: string
+            minLength: 1
+            pattern: '\S'
+        status:
+          $ref: '#/components/schemas/TaskStatus'
+    TaskResponse:
+      type: object
+      additionalProperties: false
+      required: [data]
+      properties:
+        data:
+          $ref: '#/components/schemas/Task'
+    TaskListResponse:
+      type: object
+      additionalProperties: false
+      required: [data]
+      properties:
+        data:
+          type: array
+          items:
+            $ref: '#/components/schemas/Task'
+    DeleteTaskResponse:
+      type: object
+      additionalProperties: false
+      required: [data]
+      properties:
+        data:
+          type: object
+          additionalProperties: false
+          required: [id, deleted]
+          properties:
+            id:
+              type: string
+              format: uuid
+            deleted:
+              type: boolean
+              const: true
+    ErrorResponse:
+      type: object
+      additionalProperties: false
+      required: [error]
+      properties:
+        error:
+          type: object
+          additionalProperties: false
+          required: [code, message]
+          properties:
+            code:
+              type: string
+            message:
+              type: string
+  responses:
+    BadRequest:
+      description: >-
+        Invalid request, unknown request property, or task state transition.
+        Unknown top-level request properties are rejected.
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/ErrorResponse'
+    PayloadTooLarge:
+      description: JSON request body exceeds 10 KiB (10,240 bytes).
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/ErrorResponse'
+    NotFound:
+      description: Task ID does not exist
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/ErrorResponse'
+    InternalError:
+      description: Persistence or unexpected server error
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/ErrorResponse'
