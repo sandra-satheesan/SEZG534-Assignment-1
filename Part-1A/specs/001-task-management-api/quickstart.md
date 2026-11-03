@@ -14,11 +14,14 @@ application implementation code.
 
 ## Install and validate
 
+Run these commands from `Part-1A/`, the Part 1A application directory:
+
 ```sh
 python3 -m pip install -r requirements-security.txt
 # For a user-level Semgrep installation on macOS/Linux:
 export PATH="$(python3 -m site --user-base)/bin:$PATH"
 npm ci
+npm --prefix web ci
 npm test
 npm run lint
 npm run security
@@ -64,8 +67,8 @@ Use the route, field, status, and response definitions in
 
 ## Deterministic integration and restart checks
 
-The planned test suites must isolate their data and must not share the default runtime
-file. HTTP integration tests use an app instance and a unique temporary JSON file.
+Test suites isolate their data and do not share the default runtime file. HTTP
+integration tests use an app instance and a unique temporary JSON file.
 The independent acceptance suite is invoked separately:
 
 ```sh

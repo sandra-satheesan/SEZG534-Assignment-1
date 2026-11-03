@@ -1,6 +1,6 @@
 # Independent acceptance harness
 
-Run all public-HTTP acceptance suites from the repository root:
+Run all public-HTTP acceptance suites from `Part-1A/`:
 
 ```sh
 npm run test:acceptance
@@ -14,8 +14,8 @@ task data to determine pass/fail.
 
 ## Restart persistence result
 
-The restart acceptance suite is included in `npm run test:acceptance`. To run its
-100-cycle check by itself:
+The restart acceptance suite is included in `npm run test:acceptance`. From
+`Part-1A/`, run its 100-cycle check by itself with:
 
 ```sh
 npm test -- --runInBand --testMatch='**/acceptance/tasks.restart.acceptance.test.js'
