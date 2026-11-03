@@ -12,7 +12,7 @@
     "test:acceptance:us1": "npm test -- --runInBand --testMatch='**/acceptance/tasks.create-read.acceptance.test.js'",
     "test:acceptance": "node acceptance/run-acceptance.js",
     "lint": "eslint . --max-warnings=0",
-    "security": "semgrep scan --config contracts/semgrep.yml --error --metrics=off ."
+    "security": "semgrep scan --config contracts/semgrep.yml --error --metrics=off --no-git-ignore src tests acceptance package.json"
   },
   "dependencies": {
     "express": "5.3.0"

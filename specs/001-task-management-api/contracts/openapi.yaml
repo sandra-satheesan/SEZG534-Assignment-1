@@ -59,6 +59,7 @@ paths:
             items:
               type: string
               minLength: 1
+              pattern: '\S'
         - name: sort
           in: query
           schema:

@@ -126,13 +126,13 @@ the public API contract.
 **Purpose**: Verify shared quality gates, full traceability, and restart acceptance
 without weakening the harness or requirements.
 
-- [ ] T047 [P] Add tests for two simultaneous mutations within one process and verify both persist without lost updates; do not add multi-process guarantees in `tests/integration/json-task.repository.concurrency.test.js`
-- [ ] T048 [P] Verify the supported runtime and dependency baseline is Node.js 24, npm, ESM, and Express 5 in `tests/integration/runtime-baseline.test.js`
-- [ ] T049 Add and run the independent black-box restart suite with 100 consecutive checks that each save task data, restart the real server, and verify the unchanged task through public HTTP for SC-004, FR-013, and FR-016; record invocation/results in `acceptance/tasks.restart.acceptance.test.js` and `acceptance/README.md`
-- [ ] T050 Run Jest, ESLint, and the pinned Semgrep scan; address findings without weakening acceptance assertions in the relevant files, including `package.json`
-- [ ] T051 Review the FR-to-test mapping, OpenAPI contract, and harness independence; record human review evidence in `specs/001-task-management-api/acceptance-review.md`
-- [ ] T052 Validate the documented commands and expected outcomes in `specs/001-task-management-api/quickstart.md`
-- [ ] T053 [P] Add public-HTTP black-box tests for malformed and invalid requests, unknown properties (400), oversized bodies (413), consistent success/error envelopes, and controlled malformed/unreadable/unwritable JSON fixtures that produce safe observable persistence errors (500) without false success or mutation for FR-010, FR-012, FR-014, FR-015, and FR-016 in `acceptance/tasks.errors.acceptance.test.js`
+- [X] T047 [P] Add tests for two simultaneous mutations within one process and verify both persist without lost updates; do not add multi-process guarantees in `tests/integration/json-task.repository.concurrency.test.js`
+- [X] T048 [P] Verify the supported runtime and dependency baseline is Node.js 24, npm, ESM, and Express 5 in `tests/integration/runtime-baseline.test.js`
+- [X] T049 Add and run the independent black-box restart suite with 100 consecutive checks that each save task data, restart the real server, and verify the unchanged task through public HTTP for SC-004, FR-013, and FR-016; record invocation/results in `acceptance/tasks.restart.acceptance.test.js` and `acceptance/README.md`
+- [X] T050 Run Jest, ESLint, and the pinned Semgrep scan; address findings without weakening acceptance assertions in the relevant files, including `package.json`
+- [X] T051 Review the FR-to-test mapping, OpenAPI contract, and harness independence; record human review evidence in `specs/001-task-management-api/acceptance-review.md`
+- [X] T052 Validate the documented commands and expected outcomes in `specs/001-task-management-api/quickstart.md`
+- [X] T053 [P] Add public-HTTP black-box tests for malformed and invalid requests, unknown properties (400), oversized bodies (413), consistent success/error envelopes, and controlled malformed/unreadable/unwritable JSON fixtures that produce safe observable persistence errors (500) without false success or mutation for FR-010, FR-012, FR-014, FR-015, and FR-016 in `acceptance/tasks.errors.acceptance.test.js`
 
 ## Dependencies & Execution Order
 

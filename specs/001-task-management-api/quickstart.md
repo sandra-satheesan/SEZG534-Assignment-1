@@ -1,27 +1,34 @@
 # Quickstart: Smart Todo & Task Management API
 
-This guide describes the planned validation flow. It does not include application
-implementation code. Commands become runnable when the implementation and package
-scripts are created.
+This guide describes the implemented validation flow. It does not include
+application implementation code.
 
 ## Prerequisites
 
 - Node.js 24 and npm.
 - Dependencies installed from the committed lockfile.
+- Semgrep 1.183.0 installed from `requirements-security.txt` and available on `PATH`.
+- For a user-level Semgrep installation on macOS/Linux, add the Python user scripts
+  directory to `PATH` (the value of `python3 -m site --user-base`, followed by `/bin`).
 - No external network service or database is required for tests.
 
 ## Install and validate
 
 ```sh
+python3 -m pip install -r requirements-security.txt
+# For a user-level Semgrep installation on macOS/Linux:
+export PATH="$(python3 -m site --user-base)/bin:$PATH"
 npm ci
 npm test
 npm run lint
 npm run security
+npm run test:acceptance
 ```
 
 Expected result: deterministic unit and HTTP integration tests pass; ESLint reports
 no violations; the pinned Semgrep scan completes with no unresolved findings or only
-explicitly approved exceptions.
+explicitly approved exceptions; and the independent black-box acceptance suite
+passes, including the 100 restart checks.
 
 ## Run the service
 
@@ -71,6 +78,10 @@ delete persistence across stop and restart, and cleans up the process and tempor
 directory. It performs the 100 persistence checks required by SC-004 without fixed
 sleep-based synchronization. The acceptance suite must call only the public HTTP
 contract and must not import application modules.
+
+The request/error contract checks also run in this independent suite. They verify
+validation and body-size failures, safe error envelopes, and observable persistence
+failures using isolated fixtures.
 
 ## Human review
 
