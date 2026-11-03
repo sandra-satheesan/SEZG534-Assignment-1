@@ -7,6 +7,7 @@ export default [
       'node_modules/**',
       'coverage/**',
       'dist/**',
+      'web/dist/**',
       'build/**',
       '.venv/**',
       'data/tasks.json',
