@@ -89,8 +89,9 @@ describe('status transition acceptance (FR-008, FR-010, FR-011, FR-012, FR-015, 
     expect(current.body.data).toEqual(completed.body.data);
   });
 
-  test('returns consistent 404 error envelopes for update and delete of unknown IDs', async () => {
+  test('returns consistent 404 error envelopes for retrieval, update, and delete of unknown IDs', async () => {
     const unknownId = '22222222-2222-4222-8222-222222222222';
+    const retrieval = await jsonRequest(server, `/api/tasks/${unknownId}`);
     const update = await jsonRequest(server, `/api/tasks/${unknownId}`, {
       method: 'PATCH',
       headers: { 'content-type': 'application/json' },
@@ -100,7 +101,7 @@ describe('status transition acceptance (FR-008, FR-010, FR-011, FR-012, FR-015, 
       method: 'DELETE',
     });
 
-    for (const result of [update, deletion]) {
+    for (const result of [retrieval, update, deletion]) {
       expect(result.response.status).toBe(404);
       expect(result.body).toEqual({
         error: { code: 'NOT_FOUND', message: 'Task not found' },

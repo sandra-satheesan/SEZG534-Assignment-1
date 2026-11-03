@@ -64,6 +64,7 @@ describe('update and delete acceptance (FR-004, FR-005, FR-008, FR-012, FR-013, 
       headers: { 'content-type': 'application/json' },
       body: JSON.stringify({
         title: '  Updated task  ',
+        description: 'Updated description',
         priority: 'high',
         tags: [' new ', 'new'],
       }),
@@ -73,10 +74,20 @@ describe('update and delete acceptance (FR-004, FR-005, FR-008, FR-012, FR-013, 
       data: {
         ...created.body.data,
         title: 'Updated task',
+        description: 'Updated description',
         priority: 'high',
         tags: ['new'],
         status: 'completed',
       },
+    });
+    expect(updated.body.data.description).toBe('Updated description');
+    expect(updated.body.data).toMatchObject({
+      id: taskId,
+      title: 'Updated task',
+      description: 'Updated description',
+      priority: 'high',
+      tags: ['new'],
+      status: 'completed',
     });
 
     await server.stop();
