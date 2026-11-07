@@ -138,20 +138,20 @@ description: "Implementation task list for the Natural-Language Reminder Agent"
 
 ### Tests for User Story 5
 
-- [ ] T041 [P] [US5] Add unit tests in `Part-1B/tests/unit/test_evaluation_scoring.py` for anchored semantic dimensions, schema/invariant percentages, expected-behavior reliability, weighted aggregate math, and independent hard gates (FR-016-FR-019).
-- [ ] T042 [P] [US5] Add unit tests in `Part-1B/tests/unit/test_evaluation_cases.py` validating stable IDs, required categories, fixed reference contexts, required/forbidden facts, rubrics, and a minimum 15-case corpus (FR-014, FR-018, FR-021).
-- [ ] T043 [P] [US5] Add unit tests in `Part-1B/tests/unit/test_human_review.py` validating reviewer identity, date, run/case-set references, explicit approved/rejected decision, findings, and limitations (FR-022, FR-023).
-- [ ] T044 [P] [US5] Add evaluation integration tests in `Part-1B/tests/integration/test_evaluation_runner.py` verifying three runs per case, full case-set reruns, explicit failures, and preservation of prior run evidence (FR-015, FR-020, FR-021).
+- [X] T041 [P] [US5] Add unit tests in `Part-1B/tests/unit/test_evaluation_scoring.py` for anchored semantic dimensions, schema/invariant percentages, expected-behavior reliability, weighted aggregate math, and independent hard gates (FR-016-FR-019).
+- [X] T042 [P] [US5] Add unit tests in `Part-1B/tests/unit/test_evaluation_cases.py` validating stable IDs, required categories, fixed reference contexts, required/forbidden facts, rubrics, and a minimum 15-case corpus (FR-014, FR-018, FR-021).
+- [X] T043 [P] [US5] Add unit tests in `Part-1B/tests/unit/test_human_review.py` validating reviewer identity, date, run/case-set references, explicit approved/rejected decision, findings, and limitations (FR-022, FR-023).
+- [X] T044 [P] [US5] Add evaluation integration tests in `Part-1B/tests/integration/test_evaluation_runner.py` verifying three runs per case, full case-set reruns, explicit failures, and preservation of prior run evidence (FR-015, FR-020, FR-021).
 
 ### Implementation for User Story 5
 
-- [ ] T045 [P] [US5] Create immutable version-1 JSONL cases with stable IDs NLR-001–NLR-015, fixed temporal contexts, expected properties, invariant assertions, rubric dimensions, and FR-014 category coverage in `Part-1B/eval/cases/reminder-cases.v1.jsonl` (FR-014, FR-018, FR-021).
-- [ ] T046 [US5] Implement versioned case loading and category/expectation validation in `Part-1B/app/evaluation/cases.py` (FR-014, FR-021).
-- [ ] T047 [P] [US5] Implement deterministic schema, invariant, semantic-rubric, and expected-behavior scoring in `Part-1B/app/evaluation/scoring.py`, including schema/invariant 100%, semantic 85%, reliability 90%, and weighted aggregate 90% gates (FR-016-FR-019).
-- [ ] T048 [US5] Implement repeat execution in `Part-1B/app/evaluation/runner.py` for at least three runs per case with injectable fake/Gemini provider, fixed contexts, recorded provider/model/SDK versions, and complete unchanged-corpus reruns (FR-015, FR-020, FR-021).
-- [ ] T049 [US5] Implement append-only report serialization and per-case failure evidence in `Part-1B/app/evaluation/reporting.py`; write uniquely named artifacts under `Part-1B/eval/results/` without overwriting prior runs or logging secrets/unnecessary raw text (FR-015, FR-020, FR-021; Constitution VII, IX).
-- [ ] T050 [US5] Add human review record template and acceptance procedure in `Part-1B/docs/human-review.md`, requiring review of coverage, per-case/aggregate evidence, limitations, and explicit decision after thresholds pass (FR-022, FR-023; Constitution X).
-- [ ] T051 [US5] Add a separate opt-in Gemini smoke/evaluation command in `Part-1B/app/evaluation/runner.py` that requires configured credentials, uses bounded requests, records model/date, and never runs as part of offline tests (FR-015-FR-021; Constitution V, VII).
+- [X] T045 [P] [US5] Create immutable version-1 JSONL cases with stable IDs NLR-001–NLR-015, fixed temporal contexts, expected properties, invariant assertions, rubric dimensions, and FR-014 category coverage in `Part-1B/eval/cases/reminder-cases.v1.jsonl` (FR-014, FR-018, FR-021).
+- [X] T046 [US5] Implement versioned case loading and category/expectation validation in `Part-1B/app/evaluation/cases.py` (FR-014, FR-021).
+- [X] T047 [P] [US5] Implement deterministic schema, invariant, semantic-rubric, and expected-behavior scoring in `Part-1B/app/evaluation/scoring.py`, including schema/invariant 100%, semantic 85%, reliability 90%, and weighted aggregate 90% gates (FR-016-FR-019).
+- [X] T048 [US5] Implement repeat execution in `Part-1B/app/evaluation/runner.py` for at least three runs per case with injectable fake/Gemini provider, fixed contexts, recorded provider/model/SDK versions, and complete unchanged-corpus reruns (FR-015, FR-020, FR-021).
+- [X] T049 [US5] Implement append-only report serialization and per-case failure evidence in `Part-1B/app/evaluation/reporting.py`; write uniquely named artifacts under `Part-1B/eval/results/` without overwriting prior runs or logging secrets/unnecessary raw text (FR-015, FR-020, FR-021; Constitution VII, IX).
+- [X] T050 [US5] Add human review record template and acceptance procedure in `Part-1B/docs/human-review.md`, requiring review of coverage, per-case/aggregate evidence, limitations, and explicit decision after thresholds pass (FR-022, FR-023; Constitution X).
+- [X] T051 [US5] Add a separate opt-in Gemini smoke/evaluation command in `Part-1B/app/evaluation/runner.py` that requires configured credentials, uses bounded requests, records model/date, and never runs as part of offline tests (FR-015-FR-021; Constitution V, VII).
 
 **Checkpoint**: Offline evaluation is reproducible and complete; live Gemini is opt-in; prior reports remain intact; acceptance still requires human review.
 
