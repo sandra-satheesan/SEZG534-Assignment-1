@@ -1,0 +1,291 @@
+openapi: 3.1.0
+info:
+  title: Natural-Language Reminder Interpretation API
+  version: 1.0.0
+  description: >
+    Converts one natural-language reminder request into structured reminder
+    data or a clarification/issue result. This API does not schedule reminders
+    or deliver notifications.
+paths:
+  /api/v1/reminders/interpret:
+    post:
+      operationId: interpretReminder
+      summary: Interpret a reminder request
+      description: >
+        Interprets one reminder intent. For relative timing, supply an explicit
+        reference instant and IANA time zone. The service never uses its host
+        clock or an implicit time zone to fill missing information.
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/InterpretationRequest'
+            examples:
+              relativeReminder:
+                value:
+                  text: Remind me to call Rahul tomorrow at 10 AM.
+                  reference_context:
+                    reference_instant: '2026-11-03T09:00:00+05:30'
+                    time_zone: Asia/Kolkata
+      responses:
+        '200':
+          description: The request was interpreted, needs clarification, or is semantically invalid/unsupported.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/InterpretationResult'
+              examples:
+                ready:
+                  value:
+                    schema_version: '1.0'
+                    status: ready
+                    reminder:
+                      title: call Rahul
+                      due:
+                        local_date: '2026-11-04'
+                        local_time: '10:00'
+                        time_of_day: null
+                        time_zone: Asia/Kolkata
+                        precision: exact
+                      recurrence: null
+                      follow_ups: []
+                      additional_instructions: []
+                    clarification_questions: []
+                    unresolved_fields: []
+                    issues: []
+                needsClarification:
+                  value:
+                    schema_version: '1.0'
+                    status: needs_clarification
+                    reminder:
+                      title: call my manager
+                      due: null
+                      recurrence: null
+                      follow_ups: []
+                      additional_instructions: []
+                    clarification_questions:
+                      - What date and time should I use?
+                    unresolved_fields:
+                      - due.local_date
+                      - due.local_time
+                    issues: []
+        '422':
+          description: The HTTP request body is malformed or violates request-field validation.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+        '502':
+          description: The configured model provider failed or returned invalid structured output.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+        '503':
+          description: Gemini credentials/configuration are unavailable or the provider is temporarily unavailable (including rate limiting).
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+        '504':
+          description: The model provider did not respond within the configured timeout.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+components:
+  schemas:
+    InterpretationRequest:
+      type: object
+      additionalProperties: false
+      required: [text, reference_context]
+      properties:
+        text:
+          type: string
+          minLength: 1
+          maxLength: 4000
+          description: One natural-language reminder request, trimmed before interpretation.
+        reference_context:
+          oneOf:
+            - $ref: '#/components/schemas/ReferenceContext'
+            - type: 'null'
+          description: Explicit relative-time context; null does not imply the current time or local zone.
+    ReferenceContext:
+      type: object
+      additionalProperties: false
+      required: [reference_instant, time_zone]
+      properties:
+        reference_instant:
+          type: string
+          format: date-time
+          description: RFC 3339 instant with an explicit UTC offset.
+        time_zone:
+          type: string
+          minLength: 1
+          description: Recognized IANA time-zone identifier.
+    InterpretationResult:
+      type: object
+      additionalProperties: false
+      required:
+        - schema_version
+        - status
+        - reminder
+        - clarification_questions
+        - unresolved_fields
+        - issues
+      properties:
+        schema_version:
+          type: string
+          const: '1.0'
+        status:
+          type: string
+          enum: [ready, needs_clarification, invalid, unsupported]
+        reminder:
+          oneOf:
+            - $ref: '#/components/schemas/ReminderDraft'
+            - type: 'null'
+        clarification_questions:
+          type: array
+          items:
+            type: string
+            minLength: 1
+        unresolved_fields:
+          type: array
+          items:
+            type: string
+        issues:
+          type: array
+          items:
+            $ref: '#/components/schemas/InterpretationIssue'
+    ReminderDraft:
+      type: object
+      additionalProperties: false
+      required: [title, due, recurrence, follow_ups, additional_instructions]
+      properties:
+        title:
+          oneOf:
+            - type: string
+              minLength: 1
+            - type: 'null'
+        due:
+          oneOf:
+            - $ref: '#/components/schemas/DueTime'
+            - type: 'null'
+        recurrence:
+          oneOf:
+            - $ref: '#/components/schemas/Recurrence'
+            - type: 'null'
+        follow_ups:
+          type: array
+          items:
+            $ref: '#/components/schemas/FollowUpInstruction'
+        additional_instructions:
+          type: array
+          items:
+            type: string
+    DueTime:
+      type: object
+      additionalProperties: false
+      required: [local_date, local_time, time_of_day, time_zone, precision]
+      properties:
+        local_date:
+          oneOf:
+            - type: string
+              format: date
+            - type: 'null'
+        local_time:
+          oneOf:
+            - type: string
+              format: time
+            - type: 'null'
+        time_of_day:
+          oneOf:
+            - type: string
+              enum: [morning, afternoon, evening, night]
+            - type: 'null'
+        time_zone:
+          oneOf:
+            - type: string
+              minLength: 1
+            - type: 'null'
+        precision:
+          type: string
+          enum: [exact, broad, unresolved]
+    Recurrence:
+      type: object
+      additionalProperties: false
+      required: [frequency, interval, weekdays, ends_on, occurrence_count]
+      properties:
+        frequency:
+          type: string
+          enum: [daily, weekly, monthly, yearly]
+        interval:
+          type: integer
+          minimum: 1
+        weekdays:
+          type: array
+          items:
+            type: string
+            enum: [MO, TU, WE, TH, FR, SA, SU]
+        ends_on:
+          oneOf:
+            - type: string
+              format: date
+            - type: 'null'
+        occurrence_count:
+          oneOf:
+            - type: integer
+              minimum: 1
+            - type: 'null'
+    FollowUpInstruction:
+      type: object
+      additionalProperties: false
+      required: [kind, delay_minutes, condition, target]
+      properties:
+        kind:
+          type: string
+          enum: [snooze, reschedule, conditional_follow_up]
+        delay_minutes:
+          oneOf:
+            - type: integer
+              minimum: 1
+            - type: 'null'
+        condition:
+          oneOf:
+            - type: string
+              enum: [if_incomplete]
+            - type: 'null'
+        target:
+          oneOf:
+            - type: string
+            - type: 'null'
+    InterpretationIssue:
+      type: object
+      additionalProperties: false
+      required: [code, field, message]
+      properties:
+        code:
+          type: string
+          minLength: 1
+        field:
+          oneOf:
+            - type: string
+            - type: 'null'
+        message:
+          type: string
+          minLength: 1
+    ErrorResponse:
+      type: object
+      additionalProperties: false
+      required: [error]
+      properties:
+        error:
+          type: object
+          additionalProperties: false
+          required: [code, message]
+          properties:
+            code:
+              type: string
+            message:
+              type: string

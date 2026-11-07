@@ -1,0 +1,1 @@
+"""Strict request and response schemas."""
