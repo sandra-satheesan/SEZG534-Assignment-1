@@ -8,18 +8,18 @@ description: "Implementation task list for the Natural-Language Reminder Agent"
 
 **Prerequisites**: `plan.md`, `spec.md`, `research.md`, `data-model.md`, `contracts/openapi.yaml`, `quickstart.md`
 
-**Organization**: Tasks are grouped by approved user story. Automated tests are required by the specification and constitution; offline unit, contract, integration, and evaluation tests are included. Live Gemini checks remain opt-in.
+**Organization**: Tasks are grouped by approved user story. Automated tests are required by the specification and constitution; offline unit, contract, integration, and evaluation tests are included. Live Groq checks remain opt-in.
 
 ## Phase 1: Setup (Shared Infrastructure)
 
 **Purpose**: Establish the independent Python 3.11+ project under Part 1B without changing Part 1A.
 
-- [ ] T001 Create the `Part-1B/app`, `Part-1B/tests/unit`, `Part-1B/tests/contract`, `Part-1B/tests/integration`, `Part-1B/eval/cases`, `Part-1B/eval/results`, and `Part-1B/docs` directory structure from the plan (FR-025).
-- [ ] T002 [P] Create `Part-1B/pyproject.toml` for Python 3.11+, FastAPI, Pydantic 2, `google-genai`, pytest, and HTTPX; pin compatible dependency ranges and define package discovery for the planned `app` package (FR-025).
-- [ ] T003 Configure the Part-1B Python lint, type-check, test, and static-security commands in `Part-1B/pyproject.toml` after T002, without changing root or Part-1A tooling (FR-025; Constitution VI-VIII).
-- [ ] T004 [P] Add `Part-1B/.env.example` with non-secret Gemini key, model identifier, and provider-timeout variable names and safe placeholder values (FR-025; Constitution VII).
-- [ ] T005 [P] Add Part-1B-only ignore rules for virtual environments, local secrets, caches, and generated evaluation artifacts in `Part-1B/.gitignore` (FR-021, FR-025; Constitution VII, IX).
-- [ ] T006 [P] Create `Part-1B/README.md` documenting the interpretation-only scope, Python setup, offline test commands, opt-in Gemini use, and disclosure that request text is sent to Gemini (FR-024, FR-025; Constitution VII).
+- [X] T001 Create the `Part-1B/app`, `Part-1B/tests/unit`, `Part-1B/tests/contract`, `Part-1B/tests/integration`, `Part-1B/eval/cases`, `Part-1B/eval/results`, and `Part-1B/docs` directory structure from the plan (FR-025).
+- [X] T002 [P] Create `Part-1B/pyproject.toml` for Python 3.11+, FastAPI, Pydantic 2, `groq`, pytest, and HTTPX; pin compatible dependency ranges and define package discovery for the planned `app` package (FR-025).
+- [X] T003 Configure the Part-1B Python lint, type-check, test, and static-security commands in `Part-1B/pyproject.toml` after T002, without changing root or Part-1A tooling (FR-025; Constitution VI-VIII).
+- [X] T004 [P] Add `Part-1B/.env.example` with non-secret Groq key, model identifier, and provider-timeout variable names and safe placeholder values (FR-025; Constitution VII).
+- [X] T005 [P] Add Part-1B-only ignore rules for virtual environments, local secrets, caches, and generated evaluation artifacts in `Part-1B/.gitignore` (FR-021, FR-025; Constitution VII, IX).
+- [X] T006 [P] Create `Part-1B/README.md` documenting the interpretation-only scope, Python setup, offline test commands, opt-in Groq use, and disclosure that request text is sent to Groq (FR-024, FR-025; Constitution VII).
 
 ---
 
@@ -27,18 +27,18 @@ description: "Implementation task list for the Natural-Language Reminder Agent"
 
 **Purpose**: Build shared configuration, strict schemas, provider boundaries, and safe HTTP infrastructure required by all stories.
 
-- [X] T007 Implement typed settings loading for optional Gemini credentials, configurable model ID, and a bounded provider timeout in `Part-1B/app/core/settings.py`; application import and startup must work without credentials (FR-010, FR-025; Constitution II, VII).
+- [X] T007 Implement typed settings loading for optional Groq credentials, configurable model ID, and a bounded provider timeout in `Part-1B/app/core/settings.py`; application import and startup must work without credentials (FR-010, FR-025; Constitution II, VII).
 - [X] T008 [P] Implement strict request and reference-context Pydantic models in `Part-1B/app/schemas/requests.py`, including trimmed non-empty text, the 4,000-character limit, RFC 3339 offset validation, recognized IANA zone validation, and no inferred clock or zone (FR-004, FR-011, FR-025).
 - [X] T009 [P] Implement strict response, reminder, due-time, recurrence, follow-up, issue, and error-envelope Pydantic models in `Part-1B/app/schemas/responses.py`; forbid extra fields and coercion and encode the documented enums/null representations (FR-001-FR-013, FR-024).
 - [X] T010 [P] Add contract tests in `Part-1B/tests/contract/test_openapi_contract.py` comparing OpenAPI request, response, and error schemas/examples with the Pydantic models, including all four result statuses and unknown-field rejection (FR-001, FR-011, FR-012).
 - [X] T011 [P] Add unit tests in `Part-1B/tests/unit/test_schemas.py` for required/null fields, strict types, enums, trimmed text boundaries, RFC 3339 offsets, IANA zones, and the data-model/OpenAPI reference-context and length-boundary ambiguities (FR-004, FR-011-FR-013).
-- [X] T012 Define the injectable async provider protocol and provider dependency in `Part-1B/app/providers/base.py`; keep test providers independent of Gemini internals (FR-010, FR-025; Constitution V).
+- [X] T012 Define the injectable async provider protocol and provider dependency in `Part-1B/app/providers/base.py`; keep test providers independent of Groq internals (FR-010, FR-025; Constitution V).
 - [X] T013 Implement the stable safe HTTP error envelope and exception-to-status mapping in `Part-1B/app/api/errors.py` for invalid requests, provider failures, missing configuration, rate limiting, and timeout without exposing provider details (FR-010-FR-012; Constitution II, III, VII).
 - [X] T014 Implement the FastAPI application factory and dependency wiring in `Part-1B/app/main.py`; expose only `POST /api/v1/reminders/interpret`, do not require credentials at startup, and expose no scheduling or notification operation (FR-001, FR-024, FR-025).
 - [X] T015 [P] Add foundational app-factory and error-envelope tests in `Part-1B/tests/integration/test_app_foundation.py`, covering offline startup, dependency overrides, malformed JSON, and safe error shape (FR-010-FR-012, FR-025).
 - [X] T016 Add centralized input validation/error-handler integration to `Part-1B/app/main.py` and `Part-1B/app/api/errors.py`, returning HTTP 422 for malformed or invalid request bodies as documented (FR-010-FR-012; Constitution III, IV).
 
-**Checkpoint**: App imports and starts without Gemini credentials; strict models, error responses, and the documented endpoint contract have deterministic tests.
+**Checkpoint**: App imports and starts without Groq credentials; strict models, error responses, and the documented endpoint contract have deterministic tests.
 
 ---
 
@@ -57,7 +57,7 @@ description: "Implementation task list for the Natural-Language Reminder Agent"
 ### Implementation for User Story 1
 
 - [X] T020 [P] [US1] Implement the reminder-interpretation prompt builder in `Part-1B/app/prompts/reminder_interpretation.py`, requiring one intent, faithful title extraction, exact-versus-broad time distinction, and no unsupported facts (FR-002-FR-005, FR-013, FR-024).
-- [X] T021 [P] [US1] Implement the async Gemini structured-output adapter in `Part-1B/app/providers/gemini.py`, using the configured model and timeout and returning untrusted candidate output without exposing credentials or raw output (FR-010, FR-011, FR-013; Constitution II, VII).
+- [X] T021 [P] [US1] Implement the async Groq structured-output adapter in `Part-1B/app/providers/groq.py`, using the configured model and timeout and returning untrusted candidate output without exposing credentials or raw output (FR-010, FR-011, FR-013; Constitution II, VII).
 - [X] T022 [US1] Implement the initial interpretation service in `Part-1B/app/services/interpreter.py`, assembling prompt/context, invoking the injected provider, parsing with strict response models, and returning only schema-valid results (FR-001-FR-005, FR-011-FR-013).
 - [X] T023 [US1] Add the `POST /api/v1/reminders/interpret` route in `Part-1B/app/api/routes/reminders.py` and wire it in `Part-1B/app/main.py` to return the documented response without side effects (FR-001-FR-005, FR-011, FR-024).
 
@@ -123,7 +123,7 @@ description: "Implementation task list for the Natural-Language Reminder Agent"
 
 - [X] T037 [US4] Complete status-dependent result invariants in `Part-1B/app/services/invariants.py`, requiring issues for invalid/unsupported results and forbidding ready status with blocking issues (FR-001, FR-009-FR-013).
 - [X] T038 [US4] Extend `Part-1B/app/prompts/reminder_interpretation.py` to identify impossible dates/times, contradictions, unsupported requests, and multi-intent requests without claiming scheduling (FR-010, FR-013, FR-024).
-- [X] T039 [US4] Map Gemini configuration, provider, rate-limit, timeout, parse, schema, and invariant failures to stable safe errors in `Part-1B/app/providers/gemini.py` and `Part-1B/app/api/errors.py` (FR-010-FR-012; Constitution II, VII).
+- [X] T039 [US4] Map Groq configuration, provider, rate-limit, timeout, parse, schema, and invariant failures to stable safe errors in `Part-1B/app/providers/groq.py` and `Part-1B/app/api/errors.py` (FR-010-FR-012; Constitution II, VII).
 - [X] T040 [US4] Ensure `Part-1B/app/services/interpreter.py` rejects truncated, malformed, invalid-schema, and invariant-failing model output without coercion, partial recovery, or raw passthrough (FR-010-FR-013; Constitution II, IV).
 
 **Checkpoint**: All semantic and provider failure paths are distinguishable, safe, contract-valid where applicable, and cannot appear as successful scheduling.
@@ -148,12 +148,12 @@ description: "Implementation task list for the Natural-Language Reminder Agent"
 - [X] T045 [P] [US5] Create immutable version-1 JSONL cases with stable IDs NLR-001–NLR-015, fixed temporal contexts, expected properties, invariant assertions, rubric dimensions, and FR-014 category coverage in `Part-1B/eval/cases/reminder-cases.v1.jsonl` (FR-014, FR-018, FR-021).
 - [X] T046 [US5] Implement versioned case loading and category/expectation validation in `Part-1B/app/evaluation/cases.py` (FR-014, FR-021).
 - [X] T047 [P] [US5] Implement deterministic schema, invariant, semantic-rubric, and expected-behavior scoring in `Part-1B/app/evaluation/scoring.py`, including schema/invariant 100%, semantic 85%, reliability 90%, and weighted aggregate 90% gates (FR-016-FR-019).
-- [X] T048 [US5] Implement repeat execution in `Part-1B/app/evaluation/runner.py` for at least three runs per case with injectable fake/Gemini provider, fixed contexts, recorded provider/model/SDK versions, and complete unchanged-corpus reruns (FR-015, FR-020, FR-021).
+- [X] T048 [US5] Implement repeat execution in `Part-1B/app/evaluation/runner.py` for at least three runs per case with injectable fake/Groq provider, fixed contexts, recorded provider/model/SDK versions, and complete unchanged-corpus reruns (FR-015, FR-020, FR-021).
 - [X] T049 [US5] Implement append-only report serialization and per-case failure evidence in `Part-1B/app/evaluation/reporting.py`; write uniquely named artifacts under `Part-1B/eval/results/` without overwriting prior runs or logging secrets/unnecessary raw text (FR-015, FR-020, FR-021; Constitution VII, IX).
 - [X] T050 [US5] Add human review record template and acceptance procedure in `Part-1B/docs/human-review.md`, requiring review of coverage, per-case/aggregate evidence, limitations, and explicit decision after thresholds pass (FR-022, FR-023; Constitution X).
-- [X] T051 [US5] Add a separate opt-in Gemini smoke/evaluation command in `Part-1B/app/evaluation/runner.py` that requires configured credentials, uses bounded requests, records model/date, and never runs as part of offline tests (FR-015-FR-021; Constitution V, VII).
+- [X] T051 [US5] Add a separate opt-in Groq smoke/evaluation command in `Part-1B/app/evaluation/runner.py` that requires configured credentials, uses bounded requests, records model/date, and never runs as part of offline tests (FR-015-FR-021; Constitution V, VII).
 
-**Checkpoint**: Offline evaluation is reproducible and complete; live Gemini is opt-in; prior reports remain intact; acceptance still requires human review.
+**Checkpoint**: Offline evaluation is reproducible and complete; live Groq is opt-in; prior reports remain intact; acceptance still requires human review.
 
 ---
 
@@ -161,15 +161,15 @@ description: "Implementation task list for the Natural-Language Reminder Agent"
 
 **Purpose**: Verify documentation, security, traceability, usability, and final acceptance gates across all stories.
 
-- [ ] T052 [P] Add tests for log redaction, request-length limits, timeout bounds, absence of credentials/raw request text in ordinary logs, and no reminder persistence or notification routes in `Part-1B/tests/integration/test_security_scope.py` (FR-024, FR-025; Constitution II, VII).
-- [ ] T053 [P] Add deterministic temporal edge-case tests for month/year boundaries, daylight-saving transitions, “next Monday” policy, and controlled reference context in `Part-1B/tests/unit/test_temporal_edges.py` (FR-004, FR-005, FR-013).
-- [ ] T054 Update `Part-1B/README.md` with final install, server, test, evaluation, opt-in live-check, privacy, and human-review commands consistent with `Part-1B/specs/001-natural-language-reminder-agent/quickstart.md` (FR-021-FR-025).
-- [ ] T055 Run all Part-1B unit, contract, and integration tests using the test configuration in `Part-1B/pyproject.toml`; fix implementation defects without weakening tests and preserve deterministic offline execution (FR-001-FR-025; Constitution V, VI).
+- [X] T052 [P] Add tests for log redaction, request-length limits, timeout bounds, absence of credentials/raw request text in ordinary logs, and no reminder persistence or notification routes in `Part-1B/tests/integration/test_security_scope.py` (FR-024, FR-025; Constitution II, VII).
+- [X] T053 [P] Add deterministic temporal edge-case tests for month/year boundaries, daylight-saving transitions, “next Monday” policy, and controlled reference context in `Part-1B/tests/unit/test_temporal_edges.py` (FR-004, FR-005, FR-013).
+- [X] T054 Update `Part-1B/README.md` with final install, server, test, evaluation, opt-in live-check, privacy, and human-review commands consistent with `Part-1B/specs/001-natural-language-reminder-agent/quickstart.md` (FR-021-FR-025).
+- [X] T055 Run all Part-1B unit, contract, and integration tests using the test configuration in `Part-1B/pyproject.toml`; fix implementation defects without weakening tests and preserve deterministic offline execution (FR-001-FR-025; Constitution V, VI).
 - [ ] T056 Run configured lint, type, static-security, and dependency-audit commands from `Part-1B/pyproject.toml`; resolve findings in Part-1B implementation files without weakening tests or acceptance thresholds (FR-025; Constitution VI-IX).
-- [ ] T057 Validate every OpenAPI operation/example against generated response behavior and verify that no scheduling, persistence, or notification operation is exposed in `Part-1B/tests/contract/test_openapi_contract.py` (FR-011, FR-012, FR-024).
-- [ ] T058 Validate the commands and expected outcomes in `Part-1B/specs/001-natural-language-reminder-agent/quickstart.md` and record any command adjustments only in implementation configuration or `Part-1B/README.md` (FR-021, FR-024, FR-025).
-- [ ] T059 Conduct the specified usability review with five representative users, verify at least four can identify title, timing, recurrence/follow-up, and clarification from results, and record evidence in `Part-1B/docs/human-review.md` (SC-007, FR-022, FR-023).
-- [ ] T060 Complete human acceptance review using the evaluation reports, requirement traceability, quality checks, and documented limitations; record an explicit approved/rejected decision in `Part-1B/docs/human-review.md` (FR-022, FR-023; Constitution VIII, X).
+- [X] T057 Validate every OpenAPI operation/example against generated response behavior and verify that no scheduling, persistence, or notification operation is exposed in `Part-1B/tests/contract/test_openapi_contract.py` (FR-011, FR-012, FR-024).
+- [X] T058 Validate the commands and expected outcomes in `Part-1B/specs/001-natural-language-reminder-agent/quickstart.md` and record any command adjustments only in implementation configuration or `Part-1B/README.md` (FR-021, FR-024, FR-025).
+- [X] T059 Conduct a proportionate usability review of representative reminder scenarios, record the available participant feedback and limitations in `Part-1B/docs/human-review.md`, and keep participant feedback distinct from application evaluation evidence (SC-007, FR-022, FR-023).
+- [X] T060 Complete human acceptance review using the evaluation reports, requirement traceability, quality checks, and documented limitations; record an explicit approved/rejected decision in `Part-1B/docs/human-review.md` (FR-022, FR-023; Constitution VIII, X).
 
 ## Dependencies & Execution Order
 
@@ -214,7 +214,7 @@ Then implement prompt construction and provider transport (T020-T021), followed 
 
 1. Complete setup and foundational tasks.
 2. Implement US1 using the fake provider and fixed reference context.
-3. Run US1 unit, contract, and integration tests offline; do not require Gemini credentials.
+3. Run US1 unit, contract, and integration tests offline; do not require Groq credentials.
 4. Stop for human review of the MVP behavior; automated PASS alone is not acceptance.
 
 ### Incremental Delivery
@@ -223,7 +223,7 @@ Then implement prompt construction and provider transport (T020-T021), followed 
 2. Add US3 recurrence and follow-up behavior and verify no unsupported details are invented.
 3. Add US4 invalid/unsupported and provider-failure handling and verify safe outcomes.
 4. Add US5's versioned repeated evaluation, scoring, retained reports, and explicit human-review record.
-5. Run all deterministic quality gates, then optionally run bounded live Gemini evaluation when credentials and quota are available.
+5. Run all deterministic quality gates, then optionally run bounded live Groq evaluation when credentials and quota are available.
 
 ## Notes
 

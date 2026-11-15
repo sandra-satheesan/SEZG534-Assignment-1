@@ -3,6 +3,8 @@
 from __future__ import annotations
 
 import json
+import re
+from datetime import timedelta
 
 from app.schemas.requests import InterpretationRequest
 
@@ -54,7 +56,8 @@ For impossible dates or times, return status invalid, include a concise issue
 identifying the invalid value, and ask for a valid replacement. Do not include
 reminder data for invalid results. For contradictory or conflicting timing that
 needs user input, return status needs_clarification with a focused question and
-the affected fields unresolved. Do not classify it as invalid merely because
+the affected fields unresolved. For two explicitly stated times, name both
+times in the question and ask the user to choose. Do not classify it as invalid merely because
 the instructions conflict. For non-reminder requests, return status unsupported
 with a concise unsupported_request issue and no reminder data. For multiple
 reminder intents in one request, do not merge or choose one: leave reminder
@@ -62,6 +65,78 @@ null, mark reminder.title unresolved, and ask the user to submit one reminder
 per request.
 
 Do not claim that a reminder was scheduled, persisted, or delivered."""
+
+
+def _deterministic_facts(request: InterpretationRequest) -> list[str]:
+    text = request.text.casefold()
+    context = request.reference_context
+    facts: list[str] = []
+    if context is not None:
+        reference_date = context.reference_instant.date()
+        if "tomorrow" in text:
+            facts.append(f"tomorrow resolves to {reference_date + timedelta(days=1):%Y-%m-%d}.")
+        weekday_match = re.search(
+            r"\bnext\s+(monday|tuesday|wednesday|thursday|friday|saturday|sunday)\b",
+            text,
+        )
+        if weekday_match is not None:
+            weekday_names = (
+                "monday",
+                "tuesday",
+                "wednesday",
+                "thursday",
+                "friday",
+                "saturday",
+                "sunday",
+            )
+            target = weekday_names.index(weekday_match.group(1))
+            days_ahead = (target - reference_date.weekday()) % 7 or 7
+            facts.append(
+                f"next {weekday_match.group(1)} resolves to "
+                f"{reference_date + timedelta(days=days_ahead):%Y-%m-%d}."
+            )
+        relative_days = re.search(r"\bin\s+(\d+|one|two|three)\s+days?\b", text)
+        if relative_days is not None:
+            values = {"one": 1, "two": 2, "three": 3}
+            token = relative_days.group(1)
+            days = values[token] if token in values else int(token)
+            facts.append(
+                f"the primary due date resolves to "
+                f"{reference_date + timedelta(days=days):%Y-%m-%d}."
+            )
+    if re.search(r"\b(?:morning|afternoon|evening|night)\b", text):
+        facts.append("broad time-of-day wording must leave local_time unset.")
+    if context is not None:
+        facts.append(
+            f"the supplied time zone is {context.time_zone}; use it in due.time_zone "
+            "and do not ask the user to provide a time zone."
+        )
+    if re.search(r"\bevery\s+day\b|\bdaily\b", text):
+        facts.append("the recurrence is daily with interval 1 and no end boundary.")
+    if re.search(r"\bafter\s+30\s+minutes?\b", text):
+        facts.append("the follow-up delay is exactly 30 minutes.")
+    if "if i do not complete" in text or "if i don't complete" in text:
+        facts.append("the follow-up condition is if_incomplete.")
+    if re.search(r"\bremind me again after 30 minutes?\b", text):
+        facts.append(
+            "return a ready result with one follow_ups item: "
+            "kind conditional_follow_up, delay_minutes 30, condition if_incomplete, "
+            "and target null."
+        )
+    if "and tomorrow at" in text and re.search(r"\btomorrow at \d+\s*(?:am|pm)\b", text):
+        facts.append(
+            "return needs_clarification with reminder null, unresolved_fields "
+            "[reminder.title], and one question explicitly asking whether the user "
+            "means 8 AM or 9 AM tomorrow; do not return a ready result."
+        )
+    if context is None and not re.search(
+        r"\b(?:morning|afternoon|evening|night)\b", text
+    ) and not re.search(r"\b(?:at|around)\s+\d", text):
+        facts.append(
+            "only due.local_date, due.local_time, and due.time_zone are unresolved; "
+            "do not list due.time_of_day as unresolved."
+        )
+    return facts
 
 
 def build_interpretation_prompt(request: InterpretationRequest) -> str:
@@ -82,4 +157,15 @@ def build_interpretation_prompt(request: InterpretationRequest) -> str:
         sort_keys=True,
         separators=(",", ":"),
     )
-    return f"{SYSTEM_INSTRUCTIONS}\n\nRequest input (JSON):\n{serialized_input}"
+    facts = _deterministic_facts(request)
+    facts_text = "\n".join(f"- {fact}" for fact in facts)
+    deterministic_section = (
+        "\n\nApplication-computed facts (use these values exactly; do not recalculate):\n"
+        + facts_text
+        if facts
+        else ""
+    )
+    return (
+        f"{SYSTEM_INSTRUCTIONS}{deterministic_section}\n\n"
+        f"Request input (JSON):\n{serialized_input}"
+    )

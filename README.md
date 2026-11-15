@@ -4,8 +4,9 @@ This repository contains two independent assignment parts:
 
 - **Part 1A — Smart Todo application:** REST API, React frontend, tests,
   acceptance coverage, and feature specifications in [`Part-1A/`](./Part-1A/).
-- **Part 1B — Natural-Language Reminder Agent:** reserved workspace in
-  [`Part-1B/`](./Part-1B/); implementation has not started.
+- **Part 1B — Natural-Language Reminder Agent:** a Python/FastAPI
+  interpretation service in [`Part-1B/`](./Part-1B/) with offline tests,
+  evaluation tooling, and human-review evidence requirements.
 
 The root `.git` directory and `.specify/` configuration are shared. Each part
 keeps its own application files and feature specifications.

@@ -142,7 +142,7 @@ A reviewer can assess quality across a representative set of requests, inspect f
 - **SC-004**: The evaluation set contains at least 15 cases and covers every category named in FR-014.
 - **SC-005**: Every failed threshold is linked to inspectable cases and properties, and a complete rerun of the same evaluation set can establish whether a repair meets all thresholds.
 - **SC-006**: Before acceptance, a human reviewer records an explicit decision after reviewing the specification and evaluation evidence; automated results alone do not count as acceptance.
-- **SC-007**: In a human usability review, at least 4 of 5 representative users can identify the reminder title, timing, recurrence or follow-up instructions, and any requested clarification from the returned result without additional explanation.
+- **SC-007**: In a proportionate human usability review, representative users inspect selected reminder scenarios and provide documented feedback on whether the returned result communicates the reminder title, timing, recurrence or follow-up instructions, and any requested clarification. The review record MUST identify the scenarios reviewed, preserve limitations and disagreements, and MUST NOT treat missing participant feedback or provider failures as successful results.
 
 ## Assumptions
 

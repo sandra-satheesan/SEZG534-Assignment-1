@@ -1,13 +1,13 @@
 # Part 1B Validation Quickstart
 
-This guide describes the planned local validation workflow. It does not configure or call Gemini unless an explicit live-provider check is requested.
+This guide describes the planned local validation workflow. It does not configure or call Groq unless an explicit live-provider check is requested.
 
 ## Prerequisites
 
 - Python 3.11 or newer.
 - Work from the repository root so shared Spec Kit files remain separate from the Part 1B application.
 - A virtual environment and the Part 1B dependency manifest created during implementation.
-- No Gemini API key is needed for deterministic tests. A key is required only for the opt-in live-provider smoke check.
+- No Groq API key is needed for deterministic tests. A key is required only for the opt-in live-provider smoke check.
 
 ## Setup
 
@@ -18,7 +18,7 @@ python3 -m venv Part-1B/.venv
 Part-1B/.venv/bin/python -m pip install -e 'Part-1B[dev]'
 ```
 
-Keep the Gemini key in an environment variable or an ignored local environment file. Do not commit credentials. The app and offline tests must run without this configuration.
+Keep the Groq key in an environment variable or an ignored local environment file. Do not commit credentials. The app and offline tests must run without this configuration.
 
 ## Deterministic validation
 
@@ -28,18 +28,21 @@ Run from the repository root:
 Part-1B/.venv/bin/python -m pytest Part-1B/tests
 ```
 
-Expected result: unit, contract, and API-integration tests pass without network access or a Gemini key. Integration tests inject a fake provider through the application dependency boundary.
+Expected result: unit, contract, and API-integration tests pass without network access or a Groq key. Integration tests inject a fake provider through the application dependency boundary.
 
-Validate the versioned evaluation corpus offline:
+Validate the versioned evaluation corpus offline through the deterministic
+evaluation-runner integration test:
 
 ```sh
-Part-1B/.venv/bin/python -m app.evaluation.runner \
-  --cases Part-1B/eval/cases/reminder-cases.v1.jsonl \
-  --provider fake \
-  --runs-per-case 3
+Part-1B/.venv/bin/python -m pytest \
+  Part-1B/tests/integration/test_evaluation_runner.py
 ```
 
-Expected result: at least 15 cases are checked; every case runs at least three times; the report contains per-case schema, invariant, semantic, expected-behavior, reliability, and aggregate results; failures are explicit and a new run does not overwrite prior evidence. Exact CLI flags are finalized with implementation but must preserve these behaviors.
+Expected result: the deterministic tests verify at least 15 cases, three runs
+per case, per-case schema/invariant/semantic/expected-behavior/reliability
+and aggregate results, explicit failures, and preservation of prior evidence.
+The evaluation runner CLI is reserved for the opt-in Groq provider command
+below; it does not provide a fake-provider mode.
 
 ## API contract validation
 
@@ -52,13 +55,12 @@ For relative-time tests, use a fixed `reference_instant` and `time_zone`; expect
 Only when credentials, quota, and network access are available:
 
 ```sh
-GEMINI_API_KEY=... Part-1B/.venv/bin/python -m app.evaluation.runner \
+GROQ_API_KEY=... Part-1B/.venv/bin/python -m app.evaluation.runner \
   --cases Part-1B/eval/cases/reminder-cases.v1.jsonl \
-  --provider gemini \
   --runs-per-case 3
 ```
 
-The actual key must be supplied through the local environment, not written in shell history or committed files. Record run date, selected Gemini model, SDK version, case-set version, scores, provider errors, and accepted limitations. Recheck current provider data-handling terms before sending real user requests.
+The actual key must be supplied through the local environment, not written in shell history or committed files. Record run date, selected Groq model, SDK version, case-set version, scores, provider errors, and accepted limitations. Recheck current provider data-handling terms before sending real user requests.
 
 ## Acceptance evidence and repair
 

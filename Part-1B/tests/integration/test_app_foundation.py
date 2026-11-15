@@ -39,8 +39,8 @@ def app_with_test_routes() -> FastAPI:
     return app
 
 
-def test_app_starts_and_serves_openapi_without_gemini_credentials(monkeypatch) -> None:
-    monkeypatch.delenv("GEMINI_API_KEY", raising=False)
+def test_app_starts_and_serves_openapi_without_groq_credentials(monkeypatch) -> None:
+    monkeypatch.delenv("GROQ_API_KEY", raising=False)
     app = create_app()
 
     with TestClient(app) as client:
@@ -135,7 +135,7 @@ def test_provider_dependency_can_be_overridden_without_network_access() -> None:
     assert response.json() == {"result": "probe"}
 
 
-def test_missing_gemini_credentials_produce_safe_503() -> None:
+def test_missing_groq_credentials_produce_safe_503() -> None:
     app = app_with_test_routes()
 
     with TestClient(app) as client:

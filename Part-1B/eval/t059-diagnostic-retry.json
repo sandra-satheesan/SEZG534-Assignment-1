@@ -1,0 +1,14 @@
+{
+  "generated_at": "2026-11-12T03:27:29.094309+00:00",
+  "scenario_id": "NLR-001",
+  "provider": "GroqProvider",
+  "provider_model": "openai/gpt-oss-20b",
+  "request_count": 1,
+  "provider_outcome": {
+    "status": "response_received"
+  },
+  "exception_chain": [],
+  "validation": {
+    "status": "valid"
+  }
+}

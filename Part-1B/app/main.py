@@ -8,7 +8,7 @@ from app.api.errors import register_error_handlers
 from app.api.routes.reminders import router as reminders_router
 from app.core.settings import Settings
 from app.providers.base import ModelProvider
-from app.providers.gemini import GeminiProvider
+from app.providers.groq import GroqProvider
 
 
 def create_app(
@@ -20,8 +20,8 @@ def create_app(
     app_settings = settings if settings is not None else Settings.from_environment()
     app.state.settings = app_settings
     app.state.model_provider = provider
-    if provider is None and app_settings.gemini_api_key is not None:
-        app.state.model_provider = GeminiProvider(app_settings)
+    if provider is None and app_settings.groq_api_key is not None:
+        app.state.model_provider = GroqProvider(app_settings)
     register_error_handlers(app)
     app.include_router(reminders_router)
     return app

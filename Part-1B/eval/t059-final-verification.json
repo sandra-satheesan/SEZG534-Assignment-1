@@ -1,0 +1,91 @@
+{
+  "generated_at": "2026-11-12T03:48:26.935935+00:00",
+  "provider_model": "openai/gpt-oss-20b",
+  "request_count": 3,
+  "scenarios": [
+    {
+      "scenario_id": "NLR-002",
+      "request": {
+        "text": "Remind me to submit my assignment next Monday evening.",
+        "reference_context": {
+          "reference_instant": "2026-11-03T09:00:00+05:30",
+          "time_zone": "Asia/Kolkata"
+        }
+      },
+      "provider": "GroqProvider",
+      "raw_response": "{\"schema_version\":\"1.0\",\"status\":\"ready\",\"reminder\":{\"title\":\"submit my assignment\",\"due\":{\"local_date\":\"2026-11-09\",\"local_time\":null,\"time_of_day\":\"evening\",\"precision\":\"broad\",\"time_zone\":\"Asia/Kolkata\"},\"recurrence\":null,\"follow_ups\":[],\"additional_instructions\":[]},\"clarification_questions\":[],\"unresolved_fields\":[],\"issues\":[]}",
+      "validated_result": {
+        "schema_version": "1.0",
+        "status": "ready",
+        "reminder": {
+          "title": "submit my assignment",
+          "due": {
+            "local_date": "2026-11-09",
+            "local_time": null,
+            "time_of_day": "evening",
+            "time_zone": "Asia/Kolkata",
+            "precision": "broad"
+          },
+          "recurrence": null,
+          "follow_ups": [],
+          "additional_instructions": []
+        },
+        "clarification_questions": [],
+        "unresolved_fields": [],
+        "issues": []
+      },
+      "validation": {
+        "status": "valid"
+      },
+      "provider_error": null
+    },
+    {
+      "scenario_id": "NLR-004",
+      "request": {
+        "text": "Remind me to pay the electricity bill in two days. If I do not complete it, remind me again after 30 minutes.",
+        "reference_context": {
+          "reference_instant": "2026-11-03T09:00:00+05:30",
+          "time_zone": "Asia/Kolkata"
+        }
+      },
+      "provider": "GroqProvider",
+      "raw_response": null,
+      "validated_result": null,
+      "validation": {
+        "status": "not_available"
+      },
+      "provider_error": {
+        "code": "provider_error",
+        "message": "The model provider returned an invalid response."
+      }
+    },
+    {
+      "scenario_id": "NLR-009",
+      "request": {
+        "text": "Remind me tomorrow at 8 AM and tomorrow at 9 AM.",
+        "reference_context": {
+          "reference_instant": "2026-11-03T09:00:00+05:30",
+          "time_zone": "Asia/Kolkata"
+        }
+      },
+      "provider": "GroqProvider",
+      "raw_response": "{\"schema_version\":\"1.0\",\"status\":\"needs_clarification\",\"reminder\":null,\"clarification_questions\":[\"Did you mean a reminder for 8 AM tomorrow or 9 AM tomorrow?\"],\"unresolved_fields\":[\"reminder.title\"],\"issues\":[]}",
+      "validated_result": {
+        "schema_version": "1.0",
+        "status": "needs_clarification",
+        "reminder": null,
+        "clarification_questions": [
+          "Did you mean a reminder for 8 AM tomorrow or 9 AM tomorrow?"
+        ],
+        "unresolved_fields": [
+          "reminder.title"
+        ],
+        "issues": []
+      },
+      "validation": {
+        "status": "valid"
+      },
+      "provider_error": null
+    }
+  ]
+}

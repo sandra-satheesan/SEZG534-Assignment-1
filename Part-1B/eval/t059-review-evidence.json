@@ -1,0 +1,163 @@
+{
+  "generated_at": "2026-11-12T03:36:21.801258+00:00",
+  "provider_model": "openai/gpt-oss-20b",
+  "request_count": 6,
+  "scenarios": [
+    {
+      "scenario_id": "NLR-001",
+      "request": {
+        "text": "Remind me to call Rahul tomorrow at 10 AM.",
+        "reference_context": {
+          "reference_instant": "2026-11-03T09:00:00+05:30",
+          "time_zone": "Asia/Kolkata"
+        }
+      },
+      "provider": "GroqProvider",
+      "raw_response": "{\"schema_version\":\"1.0\",\"status\":\"ready\",\"reminder\":{\"title\":\"Call Rahul\",\"due\":{\"local_date\":\"2026-11-04\",\"local_time\":\"10:00\",\"time_of_day\":null,\"time_zone\":\"Asia/Kolkata\",\"precision\":\"exact\"},\"recurrence\":null,\"follow_ups\":[],\"additional_instructions\":[]},\"clarification_questions\":[],\"unresolved_fields\":[],\"issues\":[]}",
+      "validated_result": {
+        "schema_version": "1.0",
+        "status": "ready",
+        "reminder": {
+          "title": "Call Rahul",
+          "due": {
+            "local_date": "2026-11-04",
+            "local_time": "10:00:00",
+            "time_of_day": null,
+            "time_zone": "Asia/Kolkata",
+            "precision": "exact"
+          },
+          "recurrence": null,
+          "follow_ups": [],
+          "additional_instructions": []
+        },
+        "clarification_questions": [],
+        "unresolved_fields": [],
+        "issues": []
+      },
+      "validation": {
+        "status": "valid"
+      },
+      "provider_error": null
+    },
+    {
+      "scenario_id": "NLR-002",
+      "request": {
+        "text": "Remind me to submit my assignment next Monday evening.",
+        "reference_context": {
+          "reference_instant": "2026-11-03T09:00:00+05:30",
+          "time_zone": "Asia/Kolkata"
+        }
+      },
+      "provider": "GroqProvider",
+      "raw_response": "{\"schema_version\":\"1.0\",\"status\":\"ready\",\"reminder\":{\"title\":\"submit my assignment\",\"due\":{\"local_date\":\"2026-11-07\",\"local_time\":null,\"time_of_day\":\"evening\",\"time_zone\":\"Asia/Kolkata\",\"precision\":\"broad\"},\"recurrence\":null,\"follow_ups\":[],\"additional_instructions\":[]},\"clarification_questions\":[],\"issues\":[],\"unresolved_fields\":[]}",
+      "validated_result": {
+        "schema_version": "1.0",
+        "status": "ready",
+        "reminder": {
+          "title": "submit my assignment",
+          "due": {
+            "local_date": "2026-11-07",
+            "local_time": null,
+            "time_of_day": "evening",
+            "time_zone": "Asia/Kolkata",
+            "precision": "broad"
+          },
+          "recurrence": null,
+          "follow_ups": [],
+          "additional_instructions": []
+        },
+        "clarification_questions": [],
+        "unresolved_fields": [],
+        "issues": []
+      },
+      "validation": {
+        "status": "valid"
+      },
+      "provider_error": null
+    },
+    {
+      "scenario_id": "NLR-003",
+      "request": {
+        "text": "Remind me to take medicine every day at 8 AM.",
+        "reference_context": {
+          "reference_instant": "2026-11-03T09:00:00+05:30",
+          "time_zone": "Asia/Kolkata"
+        }
+      },
+      "provider": "GroqProvider",
+      "raw_response": null,
+      "validated_result": null,
+      "validation": {
+        "status": "not_available"
+      },
+      "provider_error": {
+        "code": "provider_error",
+        "message": "The model provider returned an invalid response."
+      }
+    },
+    {
+      "scenario_id": "NLR-004",
+      "request": {
+        "text": "Remind me to pay the electricity bill in two days. If I do not complete it, remind me again after 30 minutes.",
+        "reference_context": {
+          "reference_instant": "2026-11-03T09:00:00+05:30",
+          "time_zone": "Asia/Kolkata"
+        }
+      },
+      "provider": "GroqProvider",
+      "raw_response": null,
+      "validated_result": null,
+      "validation": {
+        "status": "not_available"
+      },
+      "provider_error": {
+        "code": "provider_error",
+        "message": "The model provider returned an invalid response."
+      }
+    },
+    {
+      "scenario_id": "NLR-005",
+      "request": {
+        "text": "Remind me to call my manager.",
+        "reference_context": null
+      },
+      "provider": "GroqProvider",
+      "raw_response": "{\"schema_version\":\"1.0\",\"status\":\"needs_clarification\",\"reminder\":{\"title\":\"call my manager\",\"due\":null,\"recurrence\":null,\"follow_ups\":[],\"additional_instructions\":[]},\"clarification_questions\":[\"When would you like to be reminded to call your manager?\"],\"unresolved_fields\":[\"due.local_date\",\"due.local_time\",\"due.time_zone\",\"due.time_of_day\"],\"issues\":[]}",
+      "validated_result": null,
+      "validation": {
+        "status": "invalid",
+        "error_type": "ProviderOutputError",
+        "message": "Clarification result contains an unsupported unresolved field."
+      },
+      "provider_error": null
+    },
+    {
+      "scenario_id": "NLR-009",
+      "request": {
+        "text": "Remind me tomorrow at 8 AM and tomorrow at 9 AM.",
+        "reference_context": {
+          "reference_instant": "2026-11-03T09:00:00+05:30",
+          "time_zone": "Asia/Kolkata"
+        }
+      },
+      "provider": "GroqProvider",
+      "raw_response": "{\"schema_version\":\"1.0\",\"status\":\"needs_clarification\",\"reminder\":null,\"clarification_questions\":[\"Your request includes multiple reminders. Please submit one reminder per request.\"],\"unresolved_fields\":[\"reminder.title\"],\"issues\":[]}",
+      "validated_result": {
+        "schema_version": "1.0",
+        "status": "needs_clarification",
+        "reminder": null,
+        "clarification_questions": [
+          "Your request includes multiple reminders. Please submit one reminder per request."
+        ],
+        "unresolved_fields": [
+          "reminder.title"
+        ],
+        "issues": []
+      },
+      "validation": {
+        "status": "valid"
+      },
+      "provider_error": null
+    }
+  ]
+}

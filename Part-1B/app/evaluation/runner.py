@@ -21,7 +21,7 @@ from app.evaluation.scoring import (
 )
 from app.prompts.reminder_interpretation import build_interpretation_prompt
 from app.providers.base import ModelProvider
-from app.providers.gemini import GeminiProvider
+from app.providers.groq import GroqProvider
 from app.schemas.requests import InterpretationRequest, ReferenceContext
 from app.schemas.responses import InterpretationResult
 from app.services.invariants import validate_interpretation_result
@@ -112,7 +112,7 @@ class EvaluationRunner:
             "thresholds": asdict(self.thresholds),
             "provider_types": sorted(self._provider_types),
             "sdk_versions": {
-                "google-genai": importlib.metadata.version("google-genai"),
+                "groq": importlib.metadata.version("groq"),
             },
             "metadata": self.evaluation_metadata,
         }
@@ -197,34 +197,34 @@ class EvaluationRunner:
         return 1.0
 
 
-async def run_gemini_evaluation(
+async def run_groq_evaluation(
     case_set: EvaluationCaseSet,
     results_dir: Path,
     settings: Settings,
     runs_per_case: int = 3,
 ) -> EvaluationReport:
-    if settings.gemini_api_key is None:
-        raise ValueError("GEMINI_API_KEY is required for live evaluation.")
+    if settings.groq_api_key is None:
+        raise ValueError("GROQ_API_KEY is required for live evaluation.")
     return await EvaluationRunner(
         case_set=case_set,
-        provider_factory=lambda: GeminiProvider(settings),
+        provider_factory=lambda: GroqProvider(settings),
         results_dir=results_dir,
         runs_per_case=runs_per_case,
-        evaluation_metadata={"model": settings.gemini_model},
+        evaluation_metadata={"model": settings.groq_model},
     ).run()
 
 
 def main() -> None:
     import argparse
 
-    parser = argparse.ArgumentParser(description="Run opt-in Gemini evaluation.")
+    parser = argparse.ArgumentParser(description="Run opt-in Groq evaluation.")
     parser.add_argument("--cases", type=Path, required=True)
     parser.add_argument("--results", type=Path, required=True)
     args = parser.parse_args()
     from app.evaluation.cases import load_case_set
 
     asyncio.run(
-        run_gemini_evaluation(
+        run_groq_evaluation(
             load_case_set(args.cases),
             args.results,
             Settings.from_environment(),
